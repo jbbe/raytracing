@@ -88,6 +88,7 @@ let x_unit = {x=1.; y=0.; z=0.; w=0.}
 let y_unit = {x=0.; y=1.; z=0.; w=0.}
 let z_unit = {x=0.; y=0.; z=1.; w=0.}
 let one_two_three = {x=1.; y=2.; z=3.; w=0.}
+let two_three_four = {x=2.; y=3.; z=4.; w=0.}
 let neg_one_two_three = {x=(-1.); y=(-2.); z=(-3.); w=0.}
 let test_magnitude _ =
   assert_equal (magnitude x_unit) 1.;
@@ -95,6 +96,22 @@ let test_magnitude _ =
   assert_equal (magnitude z_unit) 1.;
   assert_equal (magnitude one_two_three) (sqrt 14.);
   assert_equal (magnitude neg_one_two_three) (sqrt 14.)
+
+let test_normalize _ =
+  let n1 = {x=4.; y=0.; z=0.; w=0.;} in
+    assert_bool "normalize 4, 0, 0" (tuple_equal (normalize n1) x_unit);
+    assert_bool "normalize 1, 2, 3" (tuple_equal (normalize one_two_three) {x=0.26726; y= 0.53452; z=0.80178; w=0.});
+    assert_equal 1. (magnitude (normalize one_two_three))
+
+
+let test_dot_prod _ =
+  assert_equal 20. (dot one_two_three two_three_four)
+
+let test_cross_prod _ =
+  let res1 = {x=(-1.);y=2.; z=(-1.);w=0.} in
+    let res2 = {x=(1.);y=(-2.); z=(1.);w=0.} in
+    assert_bool "Cross (a,b)" (tuple_equal (cross one_two_three two_three_four) res1);
+    assert_bool "Cross (a,b)" (tuple_equal (cross two_three_four one_two_three) res2)
 
  
 (* let test_sub_p_from_v _ =
@@ -116,6 +133,9 @@ let suite =
     "test_fractional_mult" >:: test_fractional_mult;
     "test_scalar_div" >:: test_scalar_div;
     "test_magnitude" >:: test_magnitude;
+    "test_normalize" >:: test_normalize;
+    "test_dot_prod" >:: test_dot_prod;
+    "test_cross_prod" >:: test_cross_prod;
   ]
 
 let () =

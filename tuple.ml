@@ -43,3 +43,17 @@ let scalar_div (t: tuple) (scalar: float) : tuple =
 
 let magnitude (t: tuple) : float =
   sqrt ((t.x *. t.x) +. (t.y *. t.y) +. (t.z *. t.z) +. (t.w *. t.w))
+
+let normalize (t: tuple) : tuple =
+  let mag = magnitude t in 
+    {x= t.x /. mag; y= t.y /. mag; z= t.z /. mag; w= t.w /. mag}
+
+let dot (a: tuple) (b: tuple) : float =
+  (a.x *. b.x) +. (a.y *. b.y) +. (a.z *. b.z) +. (a.w *. b.w)
+
+let cross (a: tuple) (b: tuple) : tuple =
+  { x= a.y *. b.z -. a.z *. b.y;
+    y= a.z *. b.x -. a.x *. b.z;
+    z= a.x *. b.y -. a.y *. b.x;
+    w=0.
+  }
