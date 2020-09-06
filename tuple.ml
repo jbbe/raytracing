@@ -1,28 +1,38 @@
-type w = 
-  | Zero 
-  | One
-(* type w = float
-type x = float
-type y = float
-type z = float *)
+type tuple = {x: float; y: float; z:float; w:float}
 
-type tuple = 
-  | Point of float * float * float * w
-  | Vector of float * float * float * w
-
+exception ValueError of string
 
 let float_equal (f1: float) (f2: float) : bool =
   (Float.abs (f1 -. f2)) <= 0.0001;;
 
-let tuple_equal (t1: tuple ) (t2: tuple) : bool =
-  match t1 with
-  | Point (x1, y1, z1, w1) -> (match t2 with
-      | Point (x2, y2, z2, w2) -> 
-        (float_equal x1 x2) && (float_equal y1 y2) && (float_equal z1 z2)
-      | _ -> false)
-  | Vector (x1, y1, z1, w1) -> (match t2 with
-    | Vector (x2, y2, z2, w2) -> 
-      (float_equal x1 x2) && (float_equal y1 y2) && (float_equal z1 z2)
-    | _ -> false)
+let is_point (t: tuple) =
+  float_equal t.w 1.
 
+let is_vector (t: tuple) =
+  float_equal t.w 0.
+
+
+
+let tuple_equal (t1: tuple ) (t2: tuple) : bool =
+  (float_equal t1.x t2.x) && (float_equal t1.y t2.y) && (float_equal t1.z t2.z) && (float_equal t1.w t2.w)
+
+let tuple_add (t1: tuple ) (t2: tuple) : tuple =
+  if (float_equal t1.w 1.) && (float_equal t2.w 1.) 
+    then raise (ValueError "Cannot add two points.")
+    else {x= t1.x +. t2.x; y=t1.y +. t2.y; z= t1.z +. t2.z; w = t1.w +. t2.w}
+
+let tuple_sub (t1: tuple ) (t2: tuple) : tuple =
+  if (float_equal t1.w 0.) && (float_equal t2.w 1.) 
+    then raise (ValueError "Cannot subtract a point from a vector.")
+    else {x= t1.x -. t2.x; y=t1.y -. t2.y; z= t1.z -. t2.z; w = t1.w -. t2.w}
+
+
+let zero_vec = {x=0.; y=0.; z=0.; w=0.}
+let negate (t: tuple) : tuple = 
+  tuple_sub zero_vec t
+
+let scalar_mult (t: tuple) (scalar: float) : tuple =
+  if (float_equal t.w 1.)
+    then raise (ValueError "Cannot multiply a point.")
+    else {x=t.x *. scalar; y=t.y *. scalar; z= t.z *. scalar; w=t.w *. scalar}
 
