@@ -36,3 +36,10 @@ let scalar_mult (t: tuple) (scalar: float) : tuple =
     then raise (ValueError "Cannot multiply a point.")
     else {x=t.x *. scalar; y=t.y *. scalar; z= t.z *. scalar; w=t.w *. scalar}
 
+let scalar_div (t: tuple) (scalar: float) : tuple =
+  if (float_equal scalar 0.) 
+    then raise (ValueError "Cannot divide by 0.")
+    else  {x=t.x /. scalar; y=t.y /. scalar; z= t.z /. scalar; w=t.w /. scalar}
+
+let magnitude (t: tuple) : float =
+  sqrt ((t.x *. t.x) +. (t.y *. t.y) +. (t.z *. t.z) +. (t.w *. t.w))

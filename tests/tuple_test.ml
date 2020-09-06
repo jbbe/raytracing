@@ -79,6 +79,23 @@ let test_fractional_mult _ =
     let res = {x=0.5; y=(-1.); z=1.5; w=(-2.)} in
       assert_bool "fractional Mult" (tuple_equal (scalar_mult a 0.5) res)
  
+let test_scalar_div _ = 
+  let a = {x=1.; y= (-2.); z=3.; w=(-4.)} in 
+    let res = {x=0.5; y=(-1.); z=1.5;w=(-2.)} in
+      assert_bool "fractional Mult" (tuple_equal (scalar_div a 2.) res)
+
+let x_unit = {x=1.; y=0.; z=0.; w=0.}
+let y_unit = {x=0.; y=1.; z=0.; w=0.}
+let z_unit = {x=0.; y=0.; z=1.; w=0.}
+let one_two_three = {x=1.; y=2.; z=3.; w=0.}
+let neg_one_two_three = {x=(-1.); y=(-2.); z=(-3.); w=0.}
+let test_magnitude _ =
+  assert_equal (magnitude x_unit) 1.;
+  assert_equal (magnitude y_unit) 1.;
+  assert_equal (magnitude z_unit) 1.;
+  assert_equal (magnitude one_two_three) (sqrt 14.);
+  assert_equal (magnitude neg_one_two_three) (sqrt 14.)
+
  
 (* let test_sub_p_from_v _ =
   assert_raises Tuple.ValueError("Cannot add two points.") (Tuple.tuple_sub v1 p2) *)
@@ -97,6 +114,8 @@ let suite =
     "test_tuple_negation" >:: test_tuple_negation;
     "test_scalar_mult" >:: test_scalar_mult;
     "test_fractional_mult" >:: test_fractional_mult;
+    "test_scalar_div" >:: test_scalar_div;
+    "test_magnitude" >:: test_magnitude;
   ]
 
 let () =
