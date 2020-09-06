@@ -46,7 +46,7 @@ let magnitude (t: tuple) : float =
 
 let normalize (t: tuple) : tuple =
   let mag = magnitude t in 
-    {x= t.x /. mag; y= t.y /. mag; z= t.z /. mag; w= t.w /. mag}
+  {x= t.x /. mag; y= t.y /. mag; z= t.z /. mag; w= t.w /. mag}
 
 let dot (a: tuple) (b: tuple) : float =
   (a.x *. b.x) +. (a.y *. b.y) +. (a.z *. b.z) +. (a.w *. b.w)

@@ -3,3 +3,4 @@ test
 *.cm*
 .vscode/
 _build
+*test

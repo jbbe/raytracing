@@ -1,5 +1,7 @@
 S Tuple
+S Color
 S tests
 S tests/tuple_test
+S tests/color_test
 
 PKG Ounit2
