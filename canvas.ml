@@ -6,6 +6,7 @@ class canvas width height=
     val pixels_r = Array.make_matrix height width 0.
     val pixels_g = Array.make_matrix height width 0.
     val pixels_b = Array.make_matrix height width 0.
+    val safe = true
     method pixel (x: int) (y:int) =
       {r= pixels_r.(y).(x); g=pixels_g.(y).(x); b=pixels_b.(y).(x)}
     method height =
@@ -13,7 +14,8 @@ class canvas width height=
     method width =
       width
     method write_pixel (x: int) (y:int) (c: color) =
-      if x >= width || y >= height then raise (ValueError "Out of bounds")
+      if x >= width || y >= height 
+      then raise (ValueError "Out of bounds")
       else 
         pixels_r.(y).(x) <- c.r;
         pixels_g.(y).(x) <- c.g;
@@ -51,4 +53,8 @@ class canvas width height=
 
       (* Printf.printf "%s" (Buffer.contents out); *)
       Buffer.contents out
+    method to_file (filename: string) =
+      let oc = open_out filename in    (* create or truncate file, return channel *)
+      Printf.fprintf oc "%s\n" self#to_ppm;   (* write something *)   
+      close_out oc; 
   end

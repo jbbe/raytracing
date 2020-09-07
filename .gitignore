@@ -4,3 +4,5 @@ test
 .vscode/
 _build
 *test
+projectile
+*.ppm
