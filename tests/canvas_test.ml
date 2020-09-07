@@ -22,8 +22,8 @@ let correct_ppm2 = "P3\n10 2\n255\n255 204 153 255 204 153 255 204 153 255 204 1
 0 0 0 0 0 255 0 0 0\n" *)
 let test_create_canvas _ =
   let c = new canvas 10 20 in
-  assert_equal 10 c#height;
-  assert_equal 20 c#width;
+  assert_equal 10 c#width;
+  assert_equal 20 c#height;
   assert_bool "pixels should be black" (color_equal {r=0.;g=0.;b=0.} (c#pixel 2 2))
 
 let test_write_pixel _ =
@@ -59,7 +59,9 @@ let test_ppm_terminates _ =
   let ppm = c#to_ppm in
   let len = String.length ppm in
   let last_char = String.get ppm (len - 1) in
-  assert_equal '\n' last_char 
+  (* Printf.printf "PPm\n%s" ppm;
+  Printf.printf "Char %d %d" (Char.code last_char) len; *)
+  assert_equal 10 (Char.code last_char) 
 
 
 let suite =

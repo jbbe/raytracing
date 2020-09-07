@@ -13,7 +13,7 @@ test: colorTest tupleTest canvasTest
 	./colortest
 	./canvastest
 
-projectile: projectile.ml tuple.ml
-	ocamlfind ocamlc -o projectile -linkpkg -g  tuple.ml projectile.ml
+projectile: projectile.ml tuple.ml color.ml canvas.ml
+	ocamlfind ocamlc -o projectile -linkpkg -g  tuple.ml color.ml canvas.ml projectile.ml
 clean:
 	rm -f *_test && rm *.cm* && rm -f oUnit-* && rm -f projectile
