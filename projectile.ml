@@ -7,7 +7,7 @@ type environment = {gravity: tuple; wind: tuple}
 let height = 200
 let width = 300
 let origin = {x=0.; y=0.; z=0.; w=1.}
-let e = {gravity={x=0.; y=(-0.1); z=0.; w=0.}; wind={x=(-0.01); y=0.; z=0.; w=0.}}
+let e = {gravity={x=0.; y=(-0.1); z=0.; w=0.}; wind={x=(-0.01); y=0.02; z=0.; w=0.}}
 let start_point = {x=0.;y=1.;z=0.;w=1.}
 let velo = scalar_mult (normalize {x=3.; y=5.; z=0.; w=0.}) 5. ;;
 let p = {pos=start_point; velocity=velo}
