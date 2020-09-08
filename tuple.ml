@@ -11,8 +11,6 @@ let is_point (t: tuple) =
 let is_vector (t: tuple) =
   float_equal t.w 0.
 
-
-
 let tuple_equal (t1: tuple ) (t2: tuple) : bool =
   (float_equal t1.x t2.x) && (float_equal t1.y t2.y) && (float_equal t1.z t2.z) && (float_equal t1.w t2.w)
 
