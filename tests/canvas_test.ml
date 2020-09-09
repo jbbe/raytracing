@@ -65,7 +65,7 @@ let test_ppm_terminates _ =
 
 
 let suite =
-  "ColorTestList" >::: [
+  "CanvasTestList" >::: [
     "test_create_canvas" >:: test_create_canvas;
     "test_write_pixel" >:: test_write_pixel;
     "test_canvas_to_ppm" >:: test_canvas_to_ppm;

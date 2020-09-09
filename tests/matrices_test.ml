@@ -451,6 +451,96 @@ let test_not_invertible _ =
   assert_bool "shouldn't be invertible" (not (invertible m1))
 
 
+let test_inverse_building_blocks _ =
+  let m1 = Array.make_matrix 4 4 0. in
+  m1.(0).(0) <- (-5.);
+  m1.(0).(1) <- (2.);
+  m1.(0).(2) <- (6.);
+  m1.(0).(3) <- (-8.);
+  m1.(1).(0) <- (1.);
+  m1.(1).(1) <- (-5.);
+  m1.(1).(2) <- 1.;
+  m1.(1).(3) <- 8.;
+  m1.(2).(0) <- (7.);
+  m1.(2).(1) <- (7.);
+  m1.(2).(2) <- (-6.);
+  m1.(2).(3) <- (-7.);
+  m1.(3).(0) <- (1.);
+  m1.(3).(1) <- (-3.);
+  m1.(3).(2) <- (7.);
+  m1.(3).(3) <- 4.;
+
+  let m2 = Array.make_matrix 4 4 0. in
+  m2.(0).(0) <- (0.21805);
+  m2.(0).(1) <- (0.45113);
+  m2.(0).(2) <- (0.24060);
+  m2.(0).(3) <- (-0.04511 );
+  m2.(1).(0) <- (-0.80827 );
+  m2.(1).(1) <- (-1.45677);
+  m2.(1).(2) <- (-0.44361);
+  m2.(1).(3) <- 0.52068;
+  m2.(2).(0) <- (-0.07895);
+  m2.(2).(1) <- (-0.22368);
+  m2.(2).(2) <- (-0.05263);
+  m2.(2).(3) <- (0.19737);
+  m2.(3).(0) <- (-0.52256 );
+  m2.(3).(1) <- (-0.81391);
+  m2.(3).(2) <- (-0.30075);
+  m2.(3).(3) <- 0.30639;
+  (* let c = (cofactor m1 3 3) in
+  let k = c /. (determinant m1) in *)
+  (* assert_equal (0.30639) k; *)
+  assert_equal (532.) (determinant m1);
+  assert_equal (-160.) (cofactor m1 2 3);
+  assert_equal (105.) (cofactor m1 3 2);
+  (* Printf.printf "Cofactor 3 3";
+  print_float (cofactor m1 3 3) *)
+  assert_equal (163.) (cofactor m1 3 3)
+
+
+let test_invertible _ =
+  let m1 = Array.make_matrix 4 4 0. in
+  m1.(0).(0) <- (6.);
+  m1.(0).(1) <- (4.);
+  m1.(0).(2) <- 4.;
+  m1.(0).(3) <- 4.;
+  m1.(1).(0) <- (5.);
+  m1.(1).(1) <- 5.;
+  m1.(1).(2) <- 7.;
+  m1.(1).(3) <- 6.;
+  m1.(2).(0) <- (4.);
+  m1.(2).(1) <- (-9.);
+  m1.(2).(2) <- (3.);
+  m1.(2).(3) <- (-7.);
+  m1.(3).(0) <- (9.);
+  m1.(3).(1) <- 1.;
+  m1.(3).(2) <- (7.);
+  m1.(3).(3) <- (-6.);
+  assert_equal (-2120.) (determinant m1);
+  assert_bool "invertible" (invertible m1)
+
+let test_not_invertible _ =
+  let m1 = Array.make_matrix 4 4 0. in
+  m1.(0).(0) <- (-4.);
+  m1.(0).(1) <- (2.);
+  m1.(0).(2) <- (-2.);
+  m1.(0).(3) <- (-3.);
+  m1.(1).(0) <- (9.);
+  m1.(1).(1) <- 6.;
+  m1.(1).(2) <- 2.;
+  m1.(1).(3) <- 6.;
+  m1.(2).(0) <- (0.);
+  m1.(2).(1) <- (-5.);
+  m1.(2).(2) <- (1.);
+  m1.(2).(3) <- (-5.);
+  m1.(3).(0) <- (0.);
+  m1.(3).(1) <- 0.;
+  m1.(3).(2) <- (0.);
+  m1.(3).(3) <- 0.;
+  assert_equal (0.) (determinant m1);
+  assert_bool "shouldn't be invertible" (not (invertible m1))
+
+
 let test_inverse _ =
   let m1 = Array.make_matrix 4 4 0. in
   m1.(0).(0) <- (-5.);
@@ -488,9 +578,9 @@ let test_inverse _ =
   m2.(3).(2) <- (-0.30075);
   m2.(3).(3) <- 0.30639; 
   let b = inverse m1 in
-  let () = m2 |> Array.iter (Array.iter print_float) in
+  (* let () = m2 |> Array.iter (Array.iter print_float) in *)
   Printf.printf "\n\n";
-  let () = b |> Array.iter (Array.iter print_float) in
+  (* let () = b |> Array.iter (Array.iter print_float) in *)
   assert_bool "Inverse" (matrix_compare m2 b);
   assert_equal (532.) (determinant m1);
   assert_equal (-160.) (cofactor m1 2 3);
@@ -535,8 +625,8 @@ let test_inverse_2 _ =
   let b = inverse m1 in
   assert_bool "Inverse" (matrix_compare m2 b)
 
-  let test_inverse_2 _ =
-    let m1 = Array.make_matrix 4 4 0. in
+let test_inverse_3 _ =
+  let m1 = Array.make_matrix 4 4 0. in
     m1.(0).(0) <- (9.);
     m1.(0).(1) <- (3.);
     m1.(0).(2) <- (0.);
@@ -597,7 +687,10 @@ let suite =
     "test_four_four_determinant" >:: test_four_four_determinant;
     "test_invertible" >:: test_invertible;
     "test_not_invertible" >:: test_not_invertible;
+    "test_inverse_building_blocks" >:: test_inverse_building_blocks;
     "test_inverse" >:: test_inverse;
+    "test_inverse_2" >:: test_inverse_2;
+    "test_inverse_3" >:: test_inverse_3;
   ]
 
 let () =

@@ -54,7 +54,7 @@ let rec determinant (m: float array array) : float =
   else 
     let det = ref 0. in
    for col = 0 to ((Array.length m) - 1) do
-    det := (!det +. m.(0).(col) *. (cofactor m 0 col));
+    det := (!det +. (m.(0).(col) *. (cofactor m 0 col)));
    done;
    !det
 
@@ -78,7 +78,7 @@ and minor (m: float array array) (row: int) (col: int) =
   determinant (submatrix m row col)
 
 and cofactor (m: float array array) (row: int) (col: int) : float =
-  (minor m row col) *. (if ((row+col mod 2)= 0) then 1. else -1.)
+  (minor m row col) *. (if (((row+col) mod 2) = 0) then (1.) else (-1.))
 
 let invertible (m: float array array) : bool = 
   (determinant m) <> 0.
@@ -87,12 +87,12 @@ let inverse (m: float array array) =
   if (not (invertible m)) then raise (ValueError "Not invertible")
   else 
   let len = (Array.length m)
-  and det = determinant m in
+  and det = (determinant m) in
   let m2 = Array.make_matrix len len 0. in
   for row = 0 to (len - 1) do
     for col = 0 to (len - 1) do
-      let c = cofactor m row col in
-      m2.(col).(row) <- c /. det
+      let c = (cofactor m row col) in
+      m2.(col).(row) <- (c /. det);
     done;
   done;
   m2

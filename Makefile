@@ -10,16 +10,17 @@ colortest: tests/color_test.ml color.ml
 tupletest: tests/tuple_test.ml tuple.ml
 	$(OCAMLC) -o tupletest $(TEST_PACKAGES) -linkpkg -g  tuple.ml tests/tuple_test.ml
 
-canvastest: tests/canvas_test.ml canvas.ml color.ml
+canvastest: tests/canvas_test.ml color.ml canvas.ml
 	$(OCAMLC) -o canvastest $(TEST_PACKAGES)  -linkpkg -g color.ml canvas.ml tests/canvas_test.ml
 
 matricestest: tests/matrices_test.ml matrices.ml tuple.ml
 	$(OCAMLC) -o matricestest $(TEST_PACKAGES)  -linkpkg -g tuple.ml matrices.ml tests/matrices_test.ml
+	./matricestest
 
 test: colortest tupletest canvastest matricestest
 	./tupletest
 	./colortest
-	./canvastes
+	./canvastest
 	./matricesTest
 
 projectile: projectile.ml $(SOURCES) 
