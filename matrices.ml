@@ -1,5 +1,13 @@
 open Tuple
 
+let print_float_newline f =
+  print_float f;
+  print_newline ()
+  
+let print_matrix m =
+    let () = m |> Array.iter (Array.iter print_float_newline) in
+    ()
+
 
 let matrix_mult (a: float array array) (b: float array array) : float array array =
   let res = Array.make_matrix 4 4 0. in

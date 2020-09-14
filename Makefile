@@ -1,4 +1,4 @@
-SOURCES = tuple.ml color.ml canvas.ml
+SOURCES = tuple.ml color.ml canvas.ml matrices.ml transformations.ml
 
 OCAMLC = ocamlfind ocamlc
 
@@ -17,11 +17,16 @@ matricestest: tests/matrices_test.ml matrices.ml tuple.ml
 	$(OCAMLC) -o matricestest $(TEST_PACKAGES)  -linkpkg -g tuple.ml matrices.ml tests/matrices_test.ml
 	./matricestest
 
-test: colortest tupletest canvastest matricestest
+transtest: tests/transformations_test.ml matrices.ml tuple.ml transformations.ml
+	$(OCAMLC) -o transtest $(TEST_PACKAGES)  -linkpkg -g $(SOURCES) tests/transformations_test.ml
+	./transtest
+
+test: colortest tupletest canvastest matricestest transtest
 	./tupletest
 	./colortest
 	./canvastest
-	./matricesTest
+	./matricestest
+	./transtest
 
 projectile: projectile.ml $(SOURCES) 
 	ocamlfind ocamlc -o projectile -linkpkg -g  tuple.ml color.ml canvas.ml projectile.ml

@@ -579,7 +579,6 @@ let test_inverse _ =
   m2.(3).(3) <- 0.30639; 
   let b = inverse m1 in
   (* let () = m2 |> Array.iter (Array.iter print_float) in *)
-  Printf.printf "\n\n";
   (* let () = b |> Array.iter (Array.iter print_float) in *)
   assert_bool "Inverse" (matrix_compare m2 b);
   assert_equal (532.) (determinant m1);

@@ -2,6 +2,11 @@ type tuple = {x: float; y: float; z:float; w:float}
 
 exception ValueError of string
 
+
+let print_tuple t =
+  Printf.printf "\nTuple : x = %f y = %f z = %f w = %f\n" t.x t.y t.z t.w;
+  ()
+
 let float_equal (f1: float) (f2: float) : bool =
   (Float.abs (f1 -. f2)) <= 0.0001;;
 

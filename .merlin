@@ -1,7 +1,8 @@
 S Tuple
 S Color
 S Canvas
-S Matrices 
+S Matrices
+S Transformations 
 S tests
 S tests/tuple_test
 S tests/color_test
