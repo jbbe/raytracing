@@ -7,6 +7,12 @@ let point_a = {x=4.3; y=(-4.2);  z=3.1; w=1.}
 
 let vector_a = {x=4.3; y=(-4.2);  z=3.1; w=0.}
 
+let test_constructors _ =
+  let p = point 4.3 (-4.2) 3.1 in
+  let v = vector 4.3 (-4.2) 3.1 in
+  assert_equal point_a p;
+  assert_equal vector_a v
+
 let test_point_tuple _ =
   (* Check if members are as they should be. *)
     assert_equal 4.3 point_a.x;
@@ -119,6 +125,7 @@ let test_cross_prod _ =
 
 let suite =
   "TupleTestList" >::: [
+    "test_constructors" >:: test_constructors;
     "test_point_tuple_x" >:: test_point_tuple;
     "test_vector_tuple" >:: test_vector_tuple;
     "test_tuple_equal" >:: test_tuple_equal;
