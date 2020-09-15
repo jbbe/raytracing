@@ -40,3 +40,13 @@ let rotation_z r =
   trans.(1).(0) <- (sin r);
   trans.(1).(1) <- (cos r);
   trans
+
+let shearing x_y x_z y_x y_z z_x z_y =
+  let trans = make_identity () in
+  trans.(0).(1) <- x_y;
+  trans.(0).(2) <- x_z;
+  trans.(1).(0) <- y_x;
+  trans.(1).(2) <- y_z;
+  trans.(2).(0) <- z_x;
+  trans.(2).(1) <- z_y;
+  trans

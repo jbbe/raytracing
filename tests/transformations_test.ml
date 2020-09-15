@@ -104,6 +104,81 @@ let test_z_rotation _ =
   assert_bool "half quarter rotation z" (tuple_equal half_res half_point);
   assert_bool "full quarter rotation z" (tuple_equal full_res full_point)
 
+let test_shearing_x_to_y _ =
+  let trans = shearing 1. 0. 0. 0. 0. 0. in
+  let p = {x=(2.); y=(3.); z=4.; w=1.} in
+  let res = matrix_tuple_mult trans p in
+  let correct = {x=(5.); y=(3.); z=4.; w=1.} in
+  assert_bool "shearing x to y" (tuple_equal correct res)
+
+let test_shearing_x_to_z _ =
+  let trans = shearing 0. 1. 0. 0. 0. 0. in
+  let p = {x=(2.); y=(3.); z=4.; w=1.} in
+  let res = matrix_tuple_mult trans p in
+  let correct = {x=(6.); y=(3.); z=4.; w=1.} in
+  assert_bool "shearing x to z" (tuple_equal correct res)
+
+let test_shearing_y_to_x _ =
+  let trans = shearing 0. 0. 1. 0. 0. 0. in
+  let p = {x=(2.); y=(3.); z=4.; w=1.} in
+  let res = matrix_tuple_mult trans p in
+  let correct = {x=(2.); y=(5.); z=4.; w=1.} in
+  assert_bool "shearing y to x" (tuple_equal correct res)
+
+let test_shearing_y_to_z _ =
+  let trans = shearing 0. 0. 0. 1. 0. 0. in
+  let p = {x=(2.); y=(3.); z=4.; w=1.} in
+  let res = matrix_tuple_mult trans p in
+  let correct = {x=(2.); y=(7.); z=4.; w=1.} in
+  assert_bool "shearing y to z" (tuple_equal correct res)
+
+let test_shearing_z_to_x _ =
+  let trans = shearing 0. 0. 0. 0. 1. 0. in
+  let p = {x=(2.); y=(3.); z=4.; w=1.} in
+  let res = matrix_tuple_mult trans p in
+  let correct = {x=(2.); y=(3.); z=6.; w=1.} in
+  assert_bool "shearing z to x" (tuple_equal correct res)
+
+let test_shearing_z_to_y _ =
+  let trans = shearing 0. 0. 0. 0. 0. 1. in
+  let p = {x=(2.); y=(3.); z=4.; w=1.} in
+  let res = matrix_tuple_mult trans p in
+  let correct = {x=(2.); y=(3.); z=7.; w=1.} in
+  assert_bool "shearing z to y" (tuple_equal correct res)
+
+let test_shearing_z_to_x _ =
+  let trans = shearing 0. 0. 0. 0. 1. 0. in
+  let p = {x=(2.); y=(3.); z=4.; w=1.} in
+  let res = matrix_tuple_mult trans p in
+  let correct = {x=(2.); y=(3.); z=6.; w=1.} in
+  assert_bool "shearing z to y" (tuple_equal correct res)
+  
+let test_trans_in_sequence _ =
+  let p = {x=(1.); y=(0.); z=1.; w=1.} in
+  let a = rotation_x (pi /. 2.) in
+  let b = scaling 5. 5. 5. in
+  let c = translation 10. 5. 7. in
+  let p2 = matrix_tuple_mult a p in
+  let p2_correct = {x=(1.); y=(-1.); z=0.; w=1.} in
+  let p3 = matrix_tuple_mult b p2 in
+  let p3_correct = {x=(5.); y=(-5.); z=0.; w=1.} in
+  let p4 = matrix_tuple_mult c p3 in
+  let p4_correct = {x=(15.); y=(0.); z=7.; w=1.} in
+  assert_bool "rotation first" (tuple_equal p2_correct p2);
+  assert_bool "then scaling" (tuple_equal p3_correct p3);
+  assert_bool "then translation" (tuple_equal p4_correct p4)
+
+let test_trans_chaining _ =
+  let p = {x=(1.); y=(0.); z=1.; w=1.} in
+  let a = rotation_x (pi /. 2.) in
+  let b = scaling 5. 5. 5. in
+  let c = translation 10. 5. 7. in 
+  let chained_trans = matrix_mult (matrix_mult c b) a in
+  let res = matrix_tuple_mult chained_trans p in
+  let correct = {x=(15.); y=(0.); z=7.; w=1.} in
+  assert_bool "chained transation" (tuple_equal res correct)
+
+
 let suite =
   "TranslationTestList" >::: [
     "multiply_by_trans_matrix" >:: multiply_by_trans_matrix;
@@ -116,6 +191,14 @@ let suite =
     "test_x_rotation" >:: test_x_rotation;
     "test_y_rotation" >:: test_y_rotation;
     "test_z_rotation" >:: test_z_rotation;
+    "test_shearing_x_to_y" >:: test_shearing_x_to_y;
+    "test_shearing_x_to_z" >:: test_shearing_x_to_z;
+    "test_shearing_y_to_x" >:: test_shearing_y_to_x;
+    "test_shearing_y_to_z" >:: test_shearing_y_to_z;
+    "test_shearing_z_to_x" >:: test_shearing_z_to_x;
+    "test_shearing_z_to_y" >:: test_shearing_z_to_y;
+    "test_trans_in_sequence" >:: test_trans_in_sequence;
+    "test_trans_chaining" >:: test_trans_chaining;
 
   ]
 

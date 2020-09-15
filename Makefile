@@ -30,5 +30,9 @@ test: colortest tupletest canvastest matricestest transtest
 
 projectile: projectile.ml $(SOURCES) 
 	ocamlfind ocamlc -o projectile -linkpkg -g  tuple.ml color.ml canvas.ml projectile.ml
+
+clock: clock.ml $(SOURCES)
+	$(OCAMLC) -o clock -linkpkg -g $(SOURCES) clock.ml
+
 clean:
 	rm -f *_test *.cm*  oUnit-* -f projectile

@@ -6,3 +6,5 @@ _build
 *test
 projectile
 *.ppm
+.DS_Store
+clock
