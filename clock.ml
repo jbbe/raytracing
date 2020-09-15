@@ -6,8 +6,11 @@ open Color
 
 let inital = {x=0.; y=0.; z=1.; w=0.;}
 
-let width = 500
-let height = 500
+let width = 2000
+let height = 2000
+
+let n = 400
+
 
 let radius = (float_of_int height) /. 2.
 (* let origin = {x=radius; y=radius; z=0.; w=0.;} *)
@@ -22,7 +25,7 @@ let c = new canvas width height
 (* let trans_scale = scaling radius radius 0. *)
 let scale_factor = (3. /. 8.) *. radius
 
-let rotation_factor = pi /. 6.
+let rotation_factor = pi /. 40.
 
 let rotate hour = 
   let r = rotation_y ((float_of_int hour) *. rotation_factor) in
@@ -39,9 +42,10 @@ let x_of_pixel p : int =
   int_of_float p.x
 
 
-let pixel_of_tuple t =
+let pixel_of_tuple t hour =
   (* let shifted = tuple_add t center_coord in *)
   (* let translation = translation radius 0. radius in *)
+  let scale_factor = ((hour ) /. ((float_of_int n))) *. radius in
   let scale = scaling scale_factor 0. scale_factor in
   (* let trans = matrix_mult translation scale in *)
   let scaled = matrix_tuple_mult scale t in
@@ -52,14 +56,18 @@ let pixel_of_tuple t =
 (* let new_x = 
 let new_y = int_of_float new_pixel.y *)
 
+
+let get_random_color _ =
+{r=Random.float 1.; g=Random.float 1.; b=Random.float 1.;}
+
 let rec write_point hour _ =
-  if hour = 12 then c#to_file "clock.ppm"
+  if hour = n then c#to_file "clock.ppm"
   else 
     let position = rotate hour in
     print_tuple position;
-    let pix = pixel_of_tuple position in
+    let pix = pixel_of_tuple position (float_of_int hour) in
     print_tuple pix;
-    c#write_pixel (x_of_pixel pix) (y_of_pixel pix) color;
+    c#write_pixel (x_of_pixel pix) (y_of_pixel pix) (get_random_color ());
     write_point (hour + 1)
     ()
 
