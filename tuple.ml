@@ -2,6 +2,11 @@ type tuple = {x: float; y: float; z:float; w:float}
 
 exception ValueError of string
 
+let point _x _y _z =
+  {x=_x; y=_y; z=_z; w=1.;}
+
+let vector _x _y _z =
+  {x=_x; y=_y; z=_z; w=0.;}
 
 let print_tuple t =
   Printf.printf "\nTuple : x = %f y = %f z = %f w = %f\n" t.x t.y t.z t.w;
