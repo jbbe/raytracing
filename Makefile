@@ -39,5 +39,8 @@ projectile: projectile.ml $(SOURCES)
 clock: clock.ml $(SOURCES)
 	$(OCAMLC) -o clock -linkpkg -g $(SOURCES) clock.ml
 
+flashsphere: flash_sphere.ml $(SOURCES)
+	$(OCAMLC) -o flashsphere -linkpkg -g $(SOURCES) flash_sphere.ml
+
 clean:
 	rm -f *_test *.cm*  oUnit-* -f projectile
