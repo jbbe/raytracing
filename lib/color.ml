@@ -1,8 +1,5 @@
 type color = {r: float; g: float; b: float}
 
-let black = {r=0.; g=0.; b=0.}
-let white = {r=1.; g=1.; b=1.}
-
 let float_equal (f1: float) (f2: float) : bool =
   (Float.abs (f1 -. f2)) <= 0.0001;;
 
@@ -21,8 +18,8 @@ let color_scalar_mult (c: color) (scalar: float) : color =
 let color_equal (c1: color) (c2:color) : bool =
   (float_equal c1.r c2.r) && (float_equal c1.g c2.g) && (float_equal c1.b c2.b)
 
-let white _ =
+let white () =
   {r=1.; g=1.; b=1.}
 
-let black _ =
+let black () =
   {r=0.; g=0.; b=0.}

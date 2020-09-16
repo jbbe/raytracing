@@ -1,4 +1,5 @@
-SOURCES = tuple.ml color.ml canvas.ml matrices.ml transformations.ml lights.ml sphere.ml rays.ml 
+SOURCES = tuple.ml color.ml canvas.ml matrices.ml transformations.ml \
+			lights.ml sphere.ml rays.ml world.ml intersections.ml
 
 TESTARGETS = colortest tupletest canvastest matricestest transtest raystest spheretest
 OCAMLC = ocamlfind ocamlopt
@@ -35,6 +36,14 @@ spheretest: tests/sphere_test.ml $(SOURCES)
 lighttest: tests/lights_test.ml $(SOURCES)
 	$(OCAMLC) -o lighttest $(TEST_PACKAGES) -linkpkg -g $(SOURCES) tests/lights_test.ml
 	./lighttest
+
+worldtest: tests/world_test.ml $(SOURCES)
+	$(OCAMLC) -o worldtest $(TEST_PACKAGES) -linkpkg -g $(SOURCES) tests/world_test.ml
+	./worldtest
+
+xstest: tests/world_test.ml $(SOURCES)
+	$(OCAMLC) -o xstest $(TEST_PACKAGES) -linkpkg -g $(SOURCES) tests/intersection_test.ml
+	./xs
 
 test: 
 	./tupletest

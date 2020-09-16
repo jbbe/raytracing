@@ -1,7 +1,7 @@
 open OUnit2
-open Tuple
-open Matrices
-open Transformations
+open Raytracing.Tuple
+open Raytracing.Matrices
+open Raytracing.Transformations
 
 
 let multiply_by_trans_matrix _ =

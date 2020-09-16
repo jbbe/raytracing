@@ -1,6 +1,6 @@
 open OUnit2
-open Canvas
-open Color
+open Raytracing.Canvas
+open Raytracing.Color
 
 let correct_ppm = "P3
 5 3

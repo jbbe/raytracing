@@ -8,6 +8,9 @@ type intersection = {t: float; obj: sphere ref}
 let null_sphere = new sphere
 let null_x = {t=0.; obj=ref null_sphere}
 
+let intersection_comp (a: intersection) (b:intersection) : int =
+  compare a.t b.t 
+
 let rec print_intersections xs =
   match xs with
     | first::rest -> Printf.printf "t: %f obj %d\n" first.t (!(first.obj))#id; print_intersections rest
@@ -45,4 +48,9 @@ let hit xs =
   match xs with 
   | first::rest -> _hit rest first
   | [] -> null_x
+
+let rec intersections_on_list (spheres :sphere list) (r: ray) : (intersection list)=
+  match spheres with
+  | s::rest -> List.append (intersect s r) (intersections_on_list rest r)
+  | [] -> []
 

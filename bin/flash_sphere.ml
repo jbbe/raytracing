@@ -1,4 +1,5 @@
-open Canvas
+open Raytracing
+(* open Canvas
 open Rays
 open Sphere
 open Canvas
@@ -6,10 +7,10 @@ open Matrices
 open Transformations
 open Tuple
 open Color
-open Lights
+open Lights *)
 
-let width = 400
-let height = 400
+let width = 800
+let height = 800
 
 let wall_size = 20.
 let pixel_size = wall_size /. (float_of_int width)

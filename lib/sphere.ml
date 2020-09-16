@@ -27,8 +27,16 @@ class sphere =
     let obj_normal = tuple_sub obj_point (point 0. 0. 0.) in
     let world_normal = matrix_tuple_mult (transpose trans_inverse) obj_normal in
     normalize {x=world_normal.x; y=world_normal.y; z=world_normal.z; w=0.}
-
+  method print =
+    Printf.printf "Sphere id: %d" (self#id);
 end
 
 (* let normal_at s p =
   normalize (tuple_sub p (point 0. 0. 0.)) *)
+let rec print_spheres spheres =
+  match spheres with
+  | first::rest -> Printf.printf "id: %d\n" first#id; print_spheres rest
+  | [] -> ()
+
+(* let sphere_equalish s1 s2 =
+  (s1#material = s2#material) && (s1#transform = s2#transform) *)

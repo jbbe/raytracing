@@ -1,11 +1,8 @@
 open OUnit2
-open Tuple
-open Color
-open Matrices
-open Rays
-open Sphere
-open Transformations
-open Lights
+open Raytracing.Tuple
+open Raytracing.Color
+open Raytracing.Sphere
+open Raytracing.Lights
 
 let test_point_light_basic _ =
   let i = {r=1.; g=1.; b=1.} in

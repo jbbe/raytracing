@@ -1,0 +1,4 @@
+(tests
+    (names canvas_test color_test lights_test matrices_test rays_test sphere_test tuple_test world_test)
+    (libraries ounit2 raytracing))
+

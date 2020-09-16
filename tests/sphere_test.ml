@@ -1,9 +1,8 @@
 open OUnit2
-open Tuple
-open Matrices
-open Rays
-open Sphere
-open Transformations
+open Raytracing.Tuple
+open Raytracing.Matrices
+open Raytracing.Sphere
+open Raytracing.Transformations
 
 let test_sphere_normal_x _ =
   let s = new sphere in

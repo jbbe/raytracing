@@ -1,9 +1,9 @@
 open OUnit2
-open Tuple
-open Matrices
-open Rays
-open Sphere
-open Transformations
+open Raytracing.Tuple
+open Raytracing.Matrices
+open Raytracing.Rays
+open Raytracing.Sphere
+open Raytracing.Transformations
 
 let test_ray_creation_and_querying _ =
   let origin = {x=1.; y=2.; z=3.; w=1.;} in

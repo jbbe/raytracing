@@ -1,5 +1,5 @@
 open OUnit2
-open Color
+open Raytracing.Color
 
 let test_color_def _ =
   let c = {r= (-0.5); g=0.4; b=1.7} in

@@ -1,5 +1,5 @@
 open OUnit2
-open Tuple
+open Raytracing.Tuple
 
 (* type tuple = {x: float; y: float; z:float; w:float} *)
 

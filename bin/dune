@@ -1,0 +1,4 @@
+(executable
+    (name flash_sphere)
+    (libraries raytracing))
+

@@ -1,6 +1,6 @@
 open OUnit2
-open Matrices
-open Tuple
+open Raytracing.Matrices
+open Raytracing.Tuple
 
 let test_4_by_4_creation _ =
   let m = Array.make_matrix 4 4 0. in
