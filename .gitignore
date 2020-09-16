@@ -9,3 +9,4 @@ projectile
 .DS_Store
 clock
 flashsphere
+*.o

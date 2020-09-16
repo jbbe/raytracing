@@ -123,6 +123,23 @@ let test_cross_prod _ =
 (* let test_sub_p_from_v _ =
   assert_raises Tuple.ValueError("Cannot add two points.") (Tuple.tuple_sub v1 p2) *)
 
+let test_reflecting_at_45_deg _ =
+  let v = vector 1. (-1.) 0. in
+  let n = vector 0. (1.) 0. in
+  let r = reflect v n in
+  (* print_tuple r; *)
+  assert_equal (vector 1. 1. 0.) r
+
+let test_slanted_reflection _ =
+  let sqrt2 = (sqrt 2.) /. 2. in
+  let v = vector 0. (-1.) 0. in
+  let n = vector sqrt2 sqrt2 0. in
+  let r = reflect v n in
+  let correct = (vector 1. 0. 0.) in
+  assert_bool "slant" (tuple_equal correct  r)
+
+
+
 let suite =
   "TupleTestList" >::: [
     "test_constructors" >:: test_constructors;
@@ -143,6 +160,8 @@ let suite =
     "test_normalize" >:: test_normalize;
     "test_dot_prod" >:: test_dot_prod;
     "test_cross_prod" >:: test_cross_prod;
+    "test_reflecting_at_45_deg" >:: test_reflecting_at_45_deg;
+    "test_slanted_reflection" >:: test_slanted_reflection;
   ]
 
 let () =

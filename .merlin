@@ -5,6 +5,7 @@ S Matrices
 S Transformations
 S Rays
 S Sphere
+S Lights
 S tests
 S tests/tuple_test
 S tests/color_test

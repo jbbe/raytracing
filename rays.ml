@@ -4,12 +4,13 @@ open Sphere
 
 
 type ray = {origin: tuple; direction: tuple}
-type intersection = {t: float; obj: int}
-let null_x = {t=0.; obj=0}
+type intersection = {t: float; obj: sphere ref}
+let null_sphere = new sphere
+let null_x = {t=0.; obj=ref null_sphere}
 
 let rec print_intersections xs =
   match xs with
-    | first::rest -> Printf.printf "t: %f obj %d\n" first.t first.obj; print_intersections rest
+    | first::rest -> Printf.printf "t: %f obj %d\n" first.t (!(first.obj))#id; print_intersections rest
     | [] -> ()
 
 let position (r: ray) (t: float) =
@@ -31,7 +32,7 @@ let intersect (s: sphere) (r: ray) : intersection list  =
   else 
     let t1 = ((-1. *. b) -. (sqrt discriminant)) /. (2. *. a) in
     let t2 = ((-1. *. b) +. (sqrt discriminant)) /. (2. *. a) in
-    [{t=t1; obj=s#id;}; {t=t2; obj=s#id}]
+    [{t=t1; obj=ref s;}; {t=t2; obj=ref s}]
 
 
 let rec _hit xs lowest =

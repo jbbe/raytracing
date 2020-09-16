@@ -20,3 +20,9 @@ let color_scalar_mult (c: color) (scalar: float) : color =
 
 let color_equal (c1: color) (c2:color) : bool =
   (float_equal c1.r c2.r) && (float_equal c1.g c2.g) && (float_equal c1.b c2.b)
+
+let white _ =
+  {r=1.; g=1.; b=1.}
+
+let black _ =
+  {r=0.; g=0.; b=0.}

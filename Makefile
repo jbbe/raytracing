@@ -1,6 +1,9 @@
-SOURCES = tuple.ml color.ml canvas.ml matrices.ml transformations.ml sphere.ml rays.ml 
+SOURCES = tuple.ml color.ml canvas.ml matrices.ml transformations.ml lights.ml sphere.ml rays.ml 
 
-OCAMLC = ocamlfind ocamlc
+TESTARGETS = colortest tupletest canvastest matricestest transtest raystest spheretest
+OCAMLC = ocamlfind ocamlopt
+
+TEST_DIR = tests
 
 TEST_PACKAGES = -package oUnit2
 
@@ -25,13 +28,23 @@ raystest: tests/rays_test.ml $(SOURCES)
 	$(OCAMLC) -o raystest $(TEST_PACKAGES)  -linkpkg -g $(SOURCES) tests/rays_test.ml
 	./raystest
 
-test: colortest tupletest canvastest matricestest transtest
+spheretest: tests/sphere_test.ml $(SOURCES)
+	$(OCAMLC) -o spheretest $(TEST_PACKAGES) -linkpkg -g $(SOURCES) tests/sphere_test.ml
+	./spheretest
+
+lighttest: tests/lights_test.ml $(SOURCES)
+	$(OCAMLC) -o lighttest $(TEST_PACKAGES) -linkpkg -g $(SOURCES) tests/lights_test.ml
+	./lighttest
+
+test: 
 	./tupletest
 	./colortest
 	./canvastest
 	./matricestest
 	./transtest
 	./raystest
+	./spheretest
+	./lighttest
 
 projectile: projectile.ml $(SOURCES) 
 	ocamlfind ocamlc -o projectile -linkpkg -g  tuple.ml color.ml canvas.ml projectile.ml
@@ -41,6 +54,7 @@ clock: clock.ml $(SOURCES)
 
 flashsphere: flash_sphere.ml $(SOURCES)
 	$(OCAMLC) -o flashsphere -linkpkg -g $(SOURCES) flash_sphere.ml
+	./flashsphere
 
 clean:
-	rm -f *_test *.cm*  oUnit-* -f projectile
+	rm -f *_test *.cm*  oUnit-* -f projectile flashsphere

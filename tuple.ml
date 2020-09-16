@@ -7,6 +7,7 @@ let point _x _y _z =
 
 let vector _x _y _z =
   {x=_x; y=_y; z=_z; w=0.;}
+  
 
 let print_tuple t =
   Printf.printf "\nTuple : x = %f y = %f z = %f w = %f\n" t.x t.y t.z t.w;
@@ -65,3 +66,6 @@ let cross (a: tuple) (b: tuple) : tuple =
     z= a.x *. b.y -. a.y *. b.x;
     w=0.
   }
+
+let reflect incoming normal =
+  tuple_sub incoming (scalar_mult (scalar_mult normal 2.) (dot incoming normal))
