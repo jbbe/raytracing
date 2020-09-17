@@ -1,8 +1,8 @@
-open Canvas
-open Matrices
-open Transformations
-open Tuple
-open Color
+open Raytracing.Canvas
+open Raytracing.Matrices
+open Raytracing.Transformations
+open Raytracing.Tuple
+open Raytracing.Color
 
 let inital = {x=0.; y=0.; z=1.; w=0.;}
 

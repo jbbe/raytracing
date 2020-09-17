@@ -1,13 +1,10 @@
-open Raytracing
-(* open Canvas
-open Rays
-open Sphere
-open Canvas
-open Matrices
-open Transformations
-open Tuple
-open Color
-open Lights *)
+open Raytracing.Canvas
+open Raytracing.Rays
+open Raytracing.Sphere
+open Raytracing.Transformations
+open Raytracing.Tuple
+open Raytracing.Color
+open Raytracing.Lights
 
 let width = 800
 let height = 800

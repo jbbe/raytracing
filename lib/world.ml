@@ -13,7 +13,7 @@ class world =
     _lights
   method add_light l =
     _lights <- l::_lights
-  method objects =
+  method objects : sphere list =
     _objects
   method add_object o =
     _objects <- o::_objects
@@ -23,7 +23,7 @@ class world =
     Printf.printf "World light: "; print_spheres (self#objects);
 end
 
-let default_world _ =
+let default_world (_ : unit) : world =
   let w = new world in
   let _light = point_light (point (-10.) 10. (-10.)) (white ()) in
   let s1 = new sphere in 

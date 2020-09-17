@@ -1,6 +1,6 @@
-open Tuple
-open Color
-open Canvas
+open Raytracing.Tuple
+open Raytracing.Color
+open Raytracing.Canvas
 
 type projectile = {pos : tuple; velocity: tuple}
 type environment = {gravity: tuple; wind: tuple}

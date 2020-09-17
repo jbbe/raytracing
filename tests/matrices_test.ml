@@ -408,7 +408,7 @@ let test_four_four_determinant _ =
   assert_equal (51.) (cofactor m1 0 3);
   assert_equal (-4071.) (determinant m1)
 
-let test_invertible _ =
+let test_invertible_1 _ =
   let m1 = Array.make_matrix 4 4 0. in
   m1.(0).(0) <- (6.);
   m1.(0).(1) <- (4.);
@@ -519,7 +519,7 @@ let test_invertible _ =
   assert_equal (-2120.) (determinant m1);
   assert_bool "invertible" (invertible m1)
 
-let test_not_invertible _ =
+let test_not_invertible_1 _ =
   let m1 = Array.make_matrix 4 4 0. in
   m1.(0).(0) <- (-4.);
   m1.(0).(1) <- (2.);
@@ -685,7 +685,9 @@ let suite =
     "test_three_three_determinant" >:: test_three_three_determinant;
     "test_four_four_determinant" >:: test_four_four_determinant;
     "test_invertible" >:: test_invertible;
+    "test_invertible_1" >:: test_invertible_1;
     "test_not_invertible" >:: test_not_invertible;
+    "test_not_invertible_1" >:: test_not_invertible_1;
     "test_inverse_building_blocks" >:: test_inverse_building_blocks;
     "test_inverse" >:: test_inverse;
     "test_inverse_2" >:: test_inverse_2;

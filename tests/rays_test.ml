@@ -70,13 +70,13 @@ let test_ray_in_front_of_sphere _ =
 
 let test_xs_encapsulates_t_and_object _ =
   let s = new sphere in
-  let i = {t=3.5; obj=s#id} in
-  assert_equal s#id i.obj
+  let i = {t=3.5; obj=(ref s)} in
+  assert_equal (ref s) i.obj
 
 let test_aggregating_intersections _ =
   let s = new sphere in
-  let i1 = {t=1.; obj=s#id} in
-  let i2 = {t=2.; obj=s#id} in
+  let i1 = {t=1.; obj=(ref s)} in
+  let i2 = {t=2.; obj=(ref s)} in
   let xs = [i1; i2] in
   assert_equal 2 (List.length xs);
   assert_equal (1.)  (List.nth xs 0).t;
@@ -84,34 +84,34 @@ let test_aggregating_intersections _ =
 
 let test_hit_all_pos _ =
   let s = new sphere in
-  let i1 = {t=1.; obj=s#id} in
-  let i2 = {t=2.; obj=s#id} in
+  let i1 = {t=1.; obj=(ref s)} in
+  let i2 = {t=2.; obj=(ref s)} in
   let xs = [i1; i2] in
   let i = hit xs in
   assert_equal i1 i
 
 let test_hit_some_neg _ =
   let s = new sphere in
-  let i1 = {t=(-1.); obj=s#id} in
-  let i2 = {t=1.; obj=s#id} in
+  let i1 = {t=(-1.); obj=(ref s)} in
+  let i2 = {t=1.; obj=(ref s)} in
   let xs = [i1; i2] in
   let i = hit xs in
   assert_equal i2 i
 
 let test_hit_all_neg _ =
   let s = new sphere in
-  let i1 = {t=(-2.); obj=s#id} in
-  let i2 = {t=(-1.); obj=s#id} in
+  let i1 = {t=(-2.); obj=(ref s)} in
+  let i2 = {t=(-1.); obj=(ref s)} in
   let xs = [i1; i2] in
   let i = hit xs in
   assert_equal null_x i
 
 let test_hit_many _ =
   let s = new sphere in
-  let i1 = {t=(5.); obj=s#id} in
-  let i2 = {t=(7.); obj=s#id} in
-  let i3 = {t=(-3.); obj=s#id} in
-  let i4 = {t=(2.); obj=s#id} in
+  let i1 = {t=(5.); obj=(ref s)} in
+  let i2 = {t=(7.); obj=(ref s)} in
+  let i3 = {t=(-3.); obj=(ref s)} in
+  let i4 = {t=(2.); obj=(ref s)} in
   let xs = [i1; i2; i3; i4] in
   let i = hit xs in
   assert_equal i4 i
