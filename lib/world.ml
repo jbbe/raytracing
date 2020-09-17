@@ -4,6 +4,7 @@ open Lights
 open Tuple
 open Color
 open Transformations
+open Intersections
 
 class world =
   object(self)
@@ -12,13 +13,15 @@ class world =
   method lights =
     _lights
   method add_light l =
-    _lights <- l::_lights
+    _lights <- l::[]
   method objects : sphere list =
     _objects
   method add_object o =
     _objects <- o::_objects
   method intersect (r : ray) : (intersection list) =
     List.sort intersection_comp (intersections_on_list _objects r) 
+  method shade_hit (comps : computations) =
+    lighting (!(comps.obj)#material) (List.hd _lights) comps.point comps.eyev comps.normalv
   method print =
     Printf.printf "World light: "; print_spheres (self#objects);
 end

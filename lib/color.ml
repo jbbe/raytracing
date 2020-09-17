@@ -1,5 +1,9 @@
 type color = {r: float; g: float; b: float}
 
+let print_color c =
+  Printf.printf "\nColor : r = %f g = %f b= %f \n" c.r c.g c.b;
+  ()
+
 let float_equal (f1: float) (f2: float) : bool =
   (Float.abs (f1 -. f2)) <= 0.0001;;
 
