@@ -178,6 +178,50 @@ let test_trans_chaining _ =
   let correct = {x=(15.); y=(0.); z=7.; w=1.} in
   assert_bool "chained transation" (tuple_equal res correct)
 
+let test_default_orientation_trans_matrix _ =
+  let _from = point 0. 0. 0. in
+  let _to  = point 0. 0. (-1.) in
+  let _up = vector 0. 1. 0. in
+  let t = view_transform _from _to _up in
+  assert_equal identity_matrix t
+
+let test_view_trans_positive_z _ =
+  let _from = point 0. 0. 0. in
+  let _to  = point 0. 0. (1.) in
+  let _up = vector 0. 1. 0. in
+  let t = view_transform _from _to _up in
+  assert_equal (scaling (-1.) 1. (-1.)) t 
+
+let test_view_trans_moves_world _ =
+  let _from = point 0. 0. 8. in
+  let _to  = point 0. 0. (0.) in
+  let _up = vector 0. 1. 0. in
+  let t = view_transform _from _to _up in
+  assert_equal (translation 0. 0. (-8.)) t
+
+let test_arbitray_view_trans _ =
+  let _from = point 1. 3. 2. in
+  let _to  = point 4. (-2.) 8. in
+  let _up = vector 1. 1. 0. in
+  let t = view_transform _from _to _up in
+  let m2 = Array.make_matrix 4 4 0. in
+   m2.(0).(0) <- ( -0.50709);
+  m2.(0).(1) <- (0.50709 );
+  m2.(0).(2) <- (0.67612);
+  m2.(0).(3) <- (-2.36643);
+  m2.(1).(0) <- (0.76772 );
+  m2.(1).(1) <- (0.60609);
+  m2.(1).(2) <- (0.12122);
+  m2.(1).(3) <- (-2.82843);
+  m2.(2).(0) <- (-0.35857);
+  m2.(2).(1) <- (0.59761);
+  m2.(2).(2) <- (-0.71714);
+  m2.(2).(3) <- (0.);
+  m2.(3).(0) <- (0.);
+  m2.(3).(1) <- (0.);
+  m2.(3).(2) <- (0.);
+  m2.(3).(3) <- (1.); 
+  assert_equal identity_matrix t
 
 let suite =
   "TranslationTestList" >::: [
@@ -199,6 +243,10 @@ let suite =
     "test_shearing_z_to_y" >:: test_shearing_z_to_y;
     "test_trans_in_sequence" >:: test_trans_in_sequence;
     "test_trans_chaining" >:: test_trans_chaining;
+    "test_default_orientation_trans_matrix" >:: test_default_orientation_trans_matrix;
+    "test_view_trans_positive_z" >:: test_view_trans_positive_z;
+    "test_view_trans_moves_world" >:: test_view_trans_moves_world;
+    "test_arbitray_view_trans" >:: test_arbitray_view_trans;
 
   ]
 

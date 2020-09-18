@@ -1,4 +1,5 @@
 open Matrices
+open Tuple
 
 let pi = 4.0 *. atan 1.0
 
@@ -50,3 +51,27 @@ let shearing x_y x_z y_x y_z z_x z_y =
   trans.(2).(0) <- z_x;
   trans.(2).(1) <- z_y;
   trans
+
+let view_transform (_from : tuple) (_to : tuple) (_up : tuple)  =
+  let forward = normalize (tuple_sub _to _from) in 
+  let upn = normalize _up in
+  let left = cross forward upn in
+  let true_up = cross left forward in
+  let orientation = Array.make_matrix 4 4 0. in
+  orientation.(0).(0) <- left.x;
+  orientation.(0).(1) <- left.y;
+  orientation.(0).(2) <- left.z;
+  orientation.(0).(3) <- 0.;
+  orientation.(1).(0) <- true_up.x;
+  orientation.(1).(1) <- true_up.y;
+  orientation.(1).(2) <- true_up.z;
+  orientation.(1).(3) <- 0.;
+  orientation.(2).(0) <- ((-1.) *. forward.x);
+  orientation.(2).(1) <-  ((-1.) *. forward.y);
+  orientation.(2).(2) <-  ((-1.) *. forward.z);
+  orientation.(2).(3) <- (0.);
+  orientation.(3).(0) <- (0.);
+  orientation.(3).(1) <- (0.);
+  orientation.(3).(2) <- (0.);
+  orientation.(3).(3) <- (1.);  
+  matrix_mult orientation (translation ((-1.) *. _from.x) ((-1.) *. _from.y) ((-1.) *. _from.z))

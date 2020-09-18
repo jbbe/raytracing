@@ -53,7 +53,7 @@ let test_shadeing_intersection _ =
   let i =  {t=4.;obj=(ref shape)} in
   let comps = prepare_computations i r in
   let c = w#shade_hit comps in
-  print_color c;
+  (* print_color c; *)
   assert_bool "shading test 1" (color_equal c {r=0.38066; g=0.47583; b=0.2855;})
 
 let test_shadeing_intersection_from_inside _ =
@@ -64,7 +64,7 @@ let test_shadeing_intersection_from_inside _ =
   let i =  {t=0.5; obj=(ref shape)} in
   let comps = prepare_computations i r in
   let c = w#shade_hit comps in
-  print_color c;
+  (* print_color c; *)
   assert_bool "shading test 2" (color_equal c {r=0.90498; g=0.90498; b=0.90498;})
 
 let test_color_when_ray_misses _ =
@@ -77,7 +77,7 @@ let test_color_on_hit _ =
   let w = default_world () in
   let r = {origin=(point 0. 0. (-5.)); direction=(vector 0. 0. 1.)} in
   let correct = {r=0.38066; g=0.47583; b=0.2855;} in
-  assert_bool"color on hit" (color_equal (w#color_at r) correct)
+  assert_bool "color on hit" (color_equal (w#color_at r) correct)
 
 let test_color_given_intersection_behind_ray _ =
   let w = default_world () in

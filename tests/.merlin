@@ -5,7 +5,7 @@ B /Users/jbbe/Projects/raytracing/_opam/lib/ounit2
 B /Users/jbbe/Projects/raytracing/_opam/lib/ounit2/advanced
 B /Users/jbbe/Projects/raytracing/_opam/lib/stdlib-shims
 B ../_build/default/lib/.raytracing.objs/byte
-B ../_build/default/tests/.canvas_test.eobjs/byte
+B ../_build/default/tests/.camera_test.eobjs/byte
 S /Users/jbbe/Projects/raytracing/_opam/lib/bytes
 S /Users/jbbe/Projects/raytracing/_opam/lib/ocaml
 S /Users/jbbe/Projects/raytracing/_opam/lib/ounit2
