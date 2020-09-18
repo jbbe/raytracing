@@ -1,20 +1,22 @@
+open Canvas
 open Matrices
 open Rays
 open Tuple
+open World
 
 
 class camera (hsize_in : int) (vsize_in : int) (fov_in : float) =
 let tmp_aspect = (float_of_int hsize_in) /. (float_of_int vsize_in) in
 let tmp_half_view = tan (fov_in /. 2.) in
 let tmp_half_width =  if tmp_aspect >= 1. then tmp_half_view else tmp_half_view *. tmp_aspect in
-object
+object(self)
     val _hsize = hsize_in
     val _vsize = vsize_in
     val _fov = fov_in
     val _half_view = tmp_half_view
     val _aspect = tmp_aspect
     val _half_width = tmp_half_width
-    val _half_height = if tmp_half_view >= 1. then tmp_half_view *. tmp_half_view else tmp_half_view
+    val _half_height = if tmp_aspect >= 1. then tmp_half_view /. tmp_aspect else tmp_half_view
     val _pixel_size = (tmp_half_width *. 2.) /. (float_of_int hsize_in)
     val mutable _transform = make_identity ()
   method set_transform mat =
@@ -44,5 +46,14 @@ object
     let origin = matrix_tuple_mult (inverse _transform) (point 0. 0. 0.) in
     let direction = normalize (tuple_sub pixel origin) in
     {origin=origin; direction=direction}
-
+  method render (w : world) : canvas =
+    let image = new canvas _hsize _vsize in
+    for y = 0 to (_vsize - 1) do
+      for x = 0 to (_hsize -1) do
+        let r = self#ray_for_pixel x y in
+        let c = w#color_at r in
+        image#write_pixel x y c;
+      done;
+    done;
+    image
 end
