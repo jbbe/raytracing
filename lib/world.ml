@@ -21,7 +21,11 @@ class world =
   method intersect (r : ray) : (intersection list) =
     List.sort intersection_comp (intersections_on_list _objects r) 
   method shade_hit (comps : computations) =
-    lighting (!(comps.obj)#material) (List.hd _lights) comps.point comps.eyev comps.normalv
+    lighting ((!(comps.obj))#material) (List.hd _lights) comps.point comps.eyev comps.normalv
+  method color_at (r : ray) =
+    let xs = self#intersect r in
+    let _hit = hit xs in
+    if _hit = null_x then black () else (self#shade_hit (prepare_computations _hit r))
   method print =
     Printf.printf "World light: "; print_spheres (self#objects);
 end
@@ -38,7 +42,7 @@ let default_world (_ : unit) : world =
   s1#set_material m1;
   let s2 = new sphere in
   s2#set_transform (scaling 0.5 0.5 0.5);
-  w#add_object s1;
   w#add_object s2;
+  w#add_object s1;
   w#add_light _light;
   w

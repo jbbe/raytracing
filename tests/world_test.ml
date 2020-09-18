@@ -29,9 +29,10 @@ let test_default_world _ =
   assert_equal w#lights [_light];
   (* print_spheres w#objects;
   print_spheres ([s1;s2]); *)
-  assert_equal 2 (List.length (w#objects))
-  (* assert_equal m1 (((List.nth w#objects 0)#material));
-  assert_bool "s2 in w" (((List.nth w#objects 1)#transform) =  trans) *)
+  assert_equal 2 (List.length (w#objects));
+  assert_equal m1 (((List.nth w#objects 0)#material));
+  assert_equal trans (((List.nth w#objects 1)#transform))
+  (* assert_bool "s2 in w" (((List.nth w#objects 1)#transform) =  trans) *)
 
 
 let world_ray_intersec _ =
@@ -66,6 +67,28 @@ let test_shadeing_intersection_from_inside _ =
   print_color c;
   assert_bool "shading test 2" (color_equal c {r=0.90498; g=0.90498; b=0.90498;})
 
+let test_color_when_ray_misses _ =
+  let w = default_world () in
+  let r = {origin=(point 0. 0. (-5.)); direction=(vector 0. 1. 0.)} in
+  let correct = {r=0.; g=0.; b=0.;} in
+  assert_equal (w#color_at r) correct
+
+let test_color_on_hit _ =
+  let w = default_world () in
+  let r = {origin=(point 0. 0. (-5.)); direction=(vector 0. 0. 1.)} in
+  let correct = {r=0.38066; g=0.47583; b=0.2855;} in
+  assert_bool"color on hit" (color_equal (w#color_at r) correct)
+
+let test_color_given_intersection_behind_ray _ =
+  let w = default_world () in
+  let r = {origin=(point 0. 0. (0.75)); direction=(vector 0. 0. (-1.))} in
+  let outer = (List.nth w#objects 0) in
+  outer#material.ambient <- 1.;
+  let inner = (List.nth w#objects 1) in
+  inner#material.ambient <- 1.;
+  (* let correct = {r=0; g=0.; b=0.;} in *)
+  assert_equal (w#color_at r) (inner#material.color) 
+
 let suite =
   "WorldList" >::: [
     "test_create_world" >:: test_create_world;
@@ -73,6 +96,9 @@ let suite =
     "world_ray_intersec" >:: world_ray_intersec;
     "test_shadeing_intersection" >:: test_shadeing_intersection;
     "test_shadeing_intersection_from_inside" >:: test_shadeing_intersection_from_inside;
+    "test_color_when_ray_misses" >:: test_color_when_ray_misses;
+    "test_color_on_hit" >:: test_color_on_hit;
+    "test_color_given_intersection_behind_ray" >:: test_color_given_intersection_behind_ray;
 
   ]
 
