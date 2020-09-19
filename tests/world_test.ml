@@ -89,6 +89,41 @@ let test_color_given_intersection_behind_ray _ =
   (* let correct = {r=0; g=0.; b=0.;} in *)
   assert_equal (w#color_at r) (inner#material.color) 
 
+let test_no_shadow_collinear _ =
+  let w = default_world () in
+  let p = point 0. 10. 0. in
+  assert_equal false (w#is_shadowed p)
+
+let test_shadow_ed _ =
+  let w = default_world () in
+  let p = point 10. (-10.) 10. in
+  assert_equal true (w#is_shadowed p)
+
+let test_no_shadow_obj_behind_light _ =
+  let w = default_world () in
+  let p = point (-20.) 20. (-20.) in
+  assert_equal false (w#is_shadowed p)
+
+let test_no_shadow_obj_behind_point _ =
+  let w = default_world () in
+  let p = point (-2.) 2. (-2.) in
+  assert_equal false (w#is_shadowed p)
+
+let test_shade_hit_intersection_in_shadow _ =
+  let w = new world in
+  w#add_light (point_light (point 0. 0. (-10.)) (white ()));
+  w#add_object (new sphere);
+  let s2 = new sphere in
+  s2#set_transform (translation 0. 0. 10.);
+  w#add_object s2;
+  let r = {origin=(point 0. 0. 5.); direction=(vector 0. 0. 1.)} in
+  let i = {t=4.; obj=(ref s2)} in
+  let comps = prepare_computations i r in
+  let c = w#shade_hit comps in
+  assert_equal c ({r=0.1; g=0.1; b=0.1})
+
+
+
 let suite =
   "WorldList" >::: [
     "test_create_world" >:: test_create_world;
@@ -99,6 +134,11 @@ let suite =
     "test_color_when_ray_misses" >:: test_color_when_ray_misses;
     "test_color_on_hit" >:: test_color_on_hit;
     "test_color_given_intersection_behind_ray" >:: test_color_given_intersection_behind_ray;
+    "test_no_shadow_collinear" >:: test_no_shadow_collinear;
+    "test_shadow_ed" >:: test_shadow_ed;
+    "test_no_shadow_obj_behind_light" >:: test_no_shadow_obj_behind_light;
+    "test_no_shadow_obj_behind_point" >:: test_no_shadow_obj_behind_point;
+    "test_shade_hit_intersection_in_shadow" >:: test_shade_hit_intersection_in_shadow;
 
   ]
 

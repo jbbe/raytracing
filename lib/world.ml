@@ -21,11 +21,19 @@ class world =
   method intersect (r : ray) : (intersection list) =
     List.sort intersection_comp (intersections_on_list _objects r) 
   method shade_hit (comps : computations) =
-    lighting ((!(comps.obj))#material) (List.hd _lights) comps.point comps.eyev comps.normalv
+    let shadowed = self#is_shadowed comps.over_point in
+    lighting ((!(comps.obj))#material) (List.hd _lights) comps.point comps.eyev comps.normalv shadowed
   method color_at (r : ray) =
     let xs = self#intersect r in
     let _hit = hit xs in
     if _hit = null_x then black () else (self#shade_hit (prepare_computations _hit r))
+  method is_shadowed (p: tuple) =
+    let v = tuple_sub (List.hd _lights).position p in
+    let distance = magnitude v in
+    let r = {origin=p; direction=(normalize v)} in
+    let xs = self#intersect r in
+    let h = hit xs in
+    if (h <> null_x && h.t < distance) then true else false 
   method print =
     Printf.printf "World light: "; print_spheres (self#objects);
 end

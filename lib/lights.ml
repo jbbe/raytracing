@@ -22,7 +22,7 @@ let default_material _ =
     shininess=200.
     }
 
-let lighting _material _light _point _eyev _normalv =
+let lighting _material _light _point _eyev _normalv (in_shadow : bool) =
   (* combine surface color with the light's color/intensity *)
   let effective_color = schur_prod _material.color _light.intensity in
 
@@ -49,5 +49,5 @@ let lighting _material _light _point _eyev _normalv =
         then black () 
         else color_scalar_mult (color_scalar_mult _light.intensity _material.specular) (reflect_dot_eye ** _material.shininess)
       ) in
-      color_add (color_add ambient diffuse) specular
+      if in_shadow then ambient else color_add (color_add ambient diffuse) specular
   

@@ -3,6 +3,7 @@ open Raytracing.Tuple
 open Raytracing.Rays
 open Raytracing.Sphere
 open Raytracing.Intersections
+open Raytracing.Transformations
 
 
 let precompute_state_of_intersection _ =
@@ -22,7 +23,6 @@ let interection_occurs_on_outside _ =
   let comps = prepare_computations i r in
   assert_equal comps.t i.t;
   assert_equal comps.inside false
-
   
 let interection_occurs_on_inside _ =
   let r = {origin=(point 0. 0. (0.)); direction=(vector 0. 0. 1.)} in
@@ -35,11 +35,23 @@ let interection_occurs_on_inside _ =
   assert_equal comps.normalv (vector 0. 0. (-1.));
   assert_equal comps.inside true
 
+let test_acne_free _ =
+  let r = {origin=(point 0. 0. (-5.)); direction=(vector 0. 0. 1.)} in
+  let shape = new sphere in
+  shape#set_transform (translation 0. 0. 1.);
+  let i = {t=5.; obj=(ref shape)} in
+  let comps = prepare_computations i r in
+  assert_bool "over by less than epsilon over 2" (comps.over_point.z < (_EPSILON /. (-2.)));
+  assert_bool "over by less than epsilon over 2" (comps.point.z > comps.over_point.z)
+
+
+
 let suite =
   "LightsList" >::: [
     "precompute_state_of_intersection" >:: precompute_state_of_intersection;
     "interection_occurs_on_outside" >:: interection_occurs_on_outside;
     "interection_occurs_on_inside" >:: interection_occurs_on_inside;
+    "test_acne_free" >:: test_acne_free;
 
   ]
 
