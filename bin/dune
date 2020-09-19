@@ -1,4 +1,9 @@
 (executable
     (name flash_sphere)
+    (modules flash_sphere)
     (libraries raytracing))
 
+(executable
+    (name scene)
+    (modules scene)
+    (libraries raytracing))

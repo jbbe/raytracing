@@ -38,20 +38,8 @@ let transpose (m: float array array) : float array array =
 let make_identity _ =
   let id = Array.make_matrix 4 4 0. in
   id.(0).(0) <- 1.;
-  id.(0).(1) <- 0.;
-  id.(0).(2) <- 0.;
-  id.(0).(3) <- 0.;
-  id.(1).(0) <- 0.;
   id.(1).(1) <- 1.;
-  id.(1).(2) <- 0.;
-  id.(1).(3) <- 0.;
-  id.(2).(0) <- 0.;
-  id.(2).(1) <- 0.;
   id.(2).(2) <- 1.;
-  id.(2).(3) <- 0.;
-  id.(3).(0) <- 0.;
-  id.(3).(1) <- 0.;
-  id.(3).(2) <- 0.;
   id.(3).(3) <- 1.;
   id
 
