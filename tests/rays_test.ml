@@ -1,6 +1,7 @@
 open OUnit2
 open Raytracing.Tuple
 open Raytracing.Matrices
+open Raytracing.Intersections
 open Raytracing.Rays
 open Raytracing.Shapes
 open Raytracing.Transformations

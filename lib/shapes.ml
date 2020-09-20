@@ -17,6 +17,7 @@ class shape shape_type_in =
     val mutable _transform = make_identity ()
     val mutable _material = default_material ()
     method id = _id
+    method shape_type = _shape_type
     method set_transform (m :float array array) = _transform <- m
     method transform = _transform
     method set_material (mat: material) = _material <- mat
