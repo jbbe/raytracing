@@ -7,3 +7,8 @@
     (name scene)
     (modules scene)
     (libraries raytracing))
+
+(executable
+    (name plane_scene)
+    (modules plane_scene)
+    (libraries raytracing))
