@@ -1,6 +1,6 @@
 open Raytracing.Canvas
 open Raytracing.Rays
-open Raytracing.Sphere
+open Raytracing.Shapes
 open Raytracing.Transformations
 open Raytracing.Tuple
 open Raytracing.Color
@@ -21,7 +21,7 @@ let black = {r=0.; g=0.;b=0.}
 let c = new canvas width height
 
 
-let s = new sphere
+let s = new shape Sphere 
 (* let m = default_material () *)
 let m = {color={r=0.8; g=0.2; b=1.};
         ambient=0.1; 

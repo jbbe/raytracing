@@ -1,10 +1,10 @@
 open Tuple
 open Rays
-open Sphere
+open Shapes
 
 type computations = {
   t: float;
-  obj: sphere ref;
+  obj: shape ref;
   point: tuple;
   eyev: tuple;
   normalv: tuple;

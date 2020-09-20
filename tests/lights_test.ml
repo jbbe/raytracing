@@ -1,7 +1,7 @@
 open OUnit2
 open Raytracing.Tuple
 open Raytracing.Color
-open Raytracing.Sphere
+open Raytracing.Shapes
 open Raytracing.Lights
 
 let test_point_light_basic _ =
@@ -20,12 +20,12 @@ let test_default_material _ =
   assert_equal m.shininess 200.
   
 let test_sphere_material _ =
-  let s = new sphere in
+  let s = new shape Sphere in
   let m = s#material in
   assert_equal m (default_material ())
 
 let test_sphere_mat_assignment _ =
-  let s = new sphere in
+  let s = new shape Sphere  in
   let m = default_material () in
   m.ambient <- 1.;
   s#set_material m;

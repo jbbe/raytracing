@@ -1,20 +1,20 @@
 open Tuple
 open Matrices
-open Sphere
+open Shapes 
 
 
 type ray = {origin: tuple; direction: tuple}
-type intersection = {t: float; obj: sphere ref}
-let null_sphere = new sphere
+type intersection = {t: float; obj: shape ref}
+let null_sphere = new shape Sphere
 let null_x = {t=0.; obj=ref null_sphere}
 
 let intersection_comp (a: intersection) (b:intersection) : int =
   compare a.t b.t 
 
-let rec print_intersections xs =
+(* let rec print_intersections xs =
   match xs with
     | first::rest -> Printf.printf "t: %f obj %d\n" first.t (!(first.obj))#id; print_intersections rest
-    | [] -> ()
+    | [] -> () *)
 
 let position (r: ray) (t: float) =
   tuple_add r.origin (scalar_mult r.direction t)
@@ -24,7 +24,7 @@ let transform (r : ray) (m: float array array) : ray =
   let new_direction =  matrix_tuple_mult m r.direction in
   {origin=new_origin; direction=new_direction}
 
-let intersect (s: sphere) (r: ray) : intersection list  =
+let intersect (s: shape) (r: ray) : intersection list  =
   let r2 = transform r (inverse s#transform) in
   let sphere_to_ray = tuple_sub r2.origin (point 0. 0. 0.) in
   let a = dot r2.direction r2.direction in
@@ -49,8 +49,8 @@ let hit xs =
   | first::rest -> _hit rest first
   | [] -> null_x
 
-let rec intersections_on_list (spheres :sphere list) (r: ray) : (intersection list)=
-  match spheres with
+let rec intersections_on_list (shapes : shape list) (r: ray) : (intersection list)=
+  match shapes with
   | s::rest -> List.append (intersect s r) (intersections_on_list rest r)
   | [] -> []
 

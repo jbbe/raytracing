@@ -2,7 +2,7 @@ open OUnit2
 open Raytracing.Tuple
 open Raytracing.Matrices
 open Raytracing.Rays
-open Raytracing.Sphere
+open Raytracing.Shapes
 open Raytracing.Transformations
 
 let test_ray_creation_and_querying _ =
@@ -29,7 +29,7 @@ let test_ray_position _ =
 
 let test_ray_intersects_sphere_twice _ =
   let r = {origin={x=0.; y=0.; z=(-5.); w=1.;}; direction={x=0.; y=0.; z=1.; w=0.;}} in
-  let s = new sphere in
+  let s = new shape Sphere  in
   let xs = intersect s r in
   assert_equal 2 (List.length xs);
   assert_equal 4.0  (List.nth xs 0).t;
@@ -38,7 +38,7 @@ let test_ray_intersects_sphere_twice _ =
 
 let test_ray_intersects_sphere_tangent _ =
   let r = {origin={x=0.; y=1.; z=(-5.); w=1.;}; direction={x=0.; y=0.; z=1.; w=0.;}} in
-  let s = new sphere in
+  let s = new shape Sphere  in
   let xs = intersect s r in
   (* print_intersections xs; *)
   assert_equal 2 (List.length xs);
@@ -47,13 +47,13 @@ let test_ray_intersects_sphere_tangent _ =
 
 let test_ray_misses _ =
   let r = {origin={x=0.; y=2.; z=(-5.); w=1.;}; direction={x=0.; y=0.; z=1.; w=0.;}} in
-  let s = new sphere in
+  let s = new shape Sphere  in
   let xs = intersect s r in
   assert_equal 0  (List.length xs)
 
 let test_ray_origin_inside_sphere _ =
   let r = {origin={x=0.; y=0.; z=(0.); w=1.;}; direction={x=0.; y=0.; z=1.; w=0.;}} in
-  let s = new sphere in
+  let s = new shape Sphere  in
   let xs = intersect s r in
   assert_equal 2 (List.length xs);
   assert_equal (-1.0)  (List.nth xs 0).t;
@@ -61,7 +61,7 @@ let test_ray_origin_inside_sphere _ =
 
 let test_ray_in_front_of_sphere _ =
   let r = {origin={x=0.; y=0.; z=(5.); w=1.;}; direction={x=0.; y=0.; z=1.; w=0.;}} in
-  let s = new sphere in
+  let s = new shape Sphere  in
   let xs = intersect s r in
   (* print_intersections xs; *)
   assert_equal 2 (List.length xs);
@@ -69,12 +69,12 @@ let test_ray_in_front_of_sphere _ =
   assert_equal (-4.0) (List.nth xs 1).t
 
 let test_xs_encapsulates_t_and_object _ =
-  let s = new sphere in
+  let s = new shape Sphere  in
   let i = {t=3.5; obj=(ref s)} in
   assert_equal (ref s) i.obj
 
 let test_aggregating_intersections _ =
-  let s = new sphere in
+  let s = new shape Sphere  in
   let i1 = {t=1.; obj=(ref s)} in
   let i2 = {t=2.; obj=(ref s)} in
   let xs = [i1; i2] in
@@ -83,7 +83,7 @@ let test_aggregating_intersections _ =
   assert_equal 2. (List.nth xs 1).t
 
 let test_hit_all_pos _ =
-  let s = new sphere in
+  let s = new shape Sphere  in
   let i1 = {t=1.; obj=(ref s)} in
   let i2 = {t=2.; obj=(ref s)} in
   let xs = [i1; i2] in
@@ -91,7 +91,7 @@ let test_hit_all_pos _ =
   assert_equal i1 i
 
 let test_hit_some_neg _ =
-  let s = new sphere in
+  let s = new shape Sphere  in
   let i1 = {t=(-1.); obj=(ref s)} in
   let i2 = {t=1.; obj=(ref s)} in
   let xs = [i1; i2] in
@@ -99,7 +99,7 @@ let test_hit_some_neg _ =
   assert_equal i2 i
 
 let test_hit_all_neg _ =
-  let s = new sphere in
+  let s = new shape Sphere  in
   let i1 = {t=(-2.); obj=(ref s)} in
   let i2 = {t=(-1.); obj=(ref s)} in
   let xs = [i1; i2] in
@@ -107,7 +107,7 @@ let test_hit_all_neg _ =
   assert_equal null_x i
 
 let test_hit_many _ =
-  let s = new sphere in
+  let s = new shape Sphere  in
   let i1 = {t=(5.); obj=(ref s)} in
   let i2 = {t=(7.); obj=(ref s)} in
   let i3 = {t=(-3.); obj=(ref s)} in
@@ -131,18 +131,18 @@ let test_scale_ray _ =
   assert_equal (vector 0. 3. 0.) r2.direction
 
 let test_sphere_default_trans _ =
-  let s = new sphere in
+  let s = new shape Sphere  in
   assert_equal s#transform identity_matrix
 
 let test_change_sphere_trans _ =
-  let s = new sphere in
+  let s = new shape Sphere  in
   let t = translation 2. 3. 4. in 
   s#set_transform t;
   assert_equal s#transform t
 
 let test_intersect_scaled_sphere _ =
   let r ={origin=(point 0. 0. (-5.)); direction= (vector 0. 0. 1.)} in
-  let s = new sphere in
+  let s = new shape Sphere  in
   s#set_transform (scaling 2. 2. 2.);
   let xs = intersect s r in
   assert_equal 2 (List.length xs);
@@ -151,7 +151,7 @@ let test_intersect_scaled_sphere _ =
 
 let test_intersect_translated_sphere _ =
   let r ={origin=(point 0. 0. (-5.)); direction= (vector 0. 0. 1.)} in
-  let s = new sphere in
+  let s = new shape Sphere  in
   s#set_transform (translation 5. 0. 0.);
   let xs = intersect s r in
   assert_equal 0 (List.length xs)
