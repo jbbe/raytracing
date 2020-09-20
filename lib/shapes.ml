@@ -30,6 +30,6 @@ class shape shape_type_in =
         let obj_normal = tuple_sub obj_point (point 0. 0. 0.) in
         let world_normal = matrix_tuple_mult (transpose trans_inverse) obj_normal in
         normalize {x=world_normal.x; y=world_normal.y; z=world_normal.z; w=0.}
-      | Plane -> _point
+      | Plane -> vector 0. 1. 0.
 end
 

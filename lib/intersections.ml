@@ -39,37 +39,40 @@ let prepare_computations (i: intersection) (r: ray) : computations =
     over_point= tuple_add _point (scalar_mult _normalv _EPSILON);
   }
 
-  let intersect (s: shape) (r: ray) : intersection list  =
-    match s#shape_type with 
-    | Plane -> if ((Float.abs r.direction.y) < _EPSILON) then [] else []
-    | Sphere ->
-    let r2 = transform r (inverse s#transform) in
-    let sphere_to_ray = tuple_sub r2.origin (point 0. 0. 0.) in
-    let a = dot r2.direction r2.direction in
-    let b = 2. *. (dot r2.direction sphere_to_ray) in
-    let c = (dot sphere_to_ray sphere_to_ray) -. 1. in
-    let discriminant = (b *. b) -. (4. *. a *. c) in
-    if discriminant < 0. then []
-    else 
-      let t1 = ((-1. *. b) -. (sqrt discriminant)) /. (2. *. a) in
-      let t2 = ((-1. *. b) +. (sqrt discriminant)) /. (2. *. a) in
-      [{t=t1; obj=ref s;}; {t=t2; obj=ref s}]
+let intersect (s: shape) (r: ray) : intersection list  =
+  match s#shape_type with 
+    | Plane -> if ((Float.abs r.direction.y) < _EPSILON) then [] 
+        else [{t=(((-1.) *. r.origin.y) /. r.direction.y); obj=ref s}]
+    | Sphere -> let r2 = transform r (inverse s#transform) in
+        let sphere_to_ray = tuple_sub r2.origin (point 0. 0. 0.) in
+        let a = dot r2.direction r2.direction in
+        let b = 2. *. (dot r2.direction sphere_to_ray) in
+        let c = (dot sphere_to_ray sphere_to_ray) -. 1. in
+        let discriminant = (b *. b) -. (4. *. a *. c) in
+        if discriminant < 0. then []
+        else 
+          let t1 = ((-1. *. b) -. (sqrt discriminant)) /. (2. *. a) in
+          let t2 = ((-1. *. b) +. (sqrt discriminant)) /. (2. *. a) in
+          [{t=t1; obj=ref s;}; {t=t2; obj=ref s}]
+    
+
+let rec _hit (xs:  intersection list) (lowest: intersection ) : intersection =
+  match xs with
+  | first::rest -> 
+    if ((first.t >= 0.) && ((first.t < lowest.t) || lowest.t < 0.)) 
+      then _hit rest first 
+      else _hit rest lowest
+  | [] -> if lowest.t >= 0. then lowest else null_x
   
-  let rec _hit (xs:  intersection list) (lowest: intersection ) : intersection =
-    match xs with
-    | first::rest -> 
-      if ((first.t >= 0.) && ((first.t < lowest.t) || lowest.t < 0.)) then _hit rest first else _hit rest lowest
-    | [] -> if lowest.t >= 0. then lowest else null_x
+let hit (xs: intersection list ) : intersection =
+  match xs with 
+  | first::rest -> _hit rest first
+  | [] -> null_x
   
-  let hit (xs: intersection list ) : intersection =
-    match xs with 
-    | first::rest -> _hit rest first
-    | [] -> null_x
-  
-  let rec intersections_on_list (shapes : shape list) (r: ray) : (intersection list)=
-    match shapes with
-    | s::rest -> List.append (intersect s r) (intersections_on_list rest r)
-    | [] -> []
+let rec intersections_on_list (shapes : shape list) (r: ray) : (intersection list)=
+  match shapes with
+  | s::rest -> List.append (intersect s r) (intersections_on_list rest r)
+  | [] -> []
 
 (* let rec print_intersections xs =
   match xs with
