@@ -36,7 +36,7 @@ let test_level_lighting _ =
   let pos = point 0. 0. 0. in
   let eyev = vector 0. 0. (-1.) in
   let normalv = vector 0. 0. (-1.) in
-  let light = point_light (point 0. 0. (-10.)) (white ()) in
+  let light = point_light (point 0. 0. (-10.)) (white ) in
   let result = lighting m light pos eyev normalv false in
   assert_equal {r=1.9; g=1.9; b=1.9} result
 
@@ -46,7 +46,7 @@ let test_lighting_offset_45deg _ =
   let pos = point 0. 0. 0. in
   let eyev = vector 0. deg45 ((-1.) *. deg45) in
   let normalv = vector 0. 0. (-1.) in
-  let light = point_light (point 0. 0. (-10.)) (white ()) in
+  let light = point_light (point 0. 0. (-10.)) (white ) in
   let result = lighting m light pos eyev normalv false in
   assert_equal {r=1.; g=1.; b=1.} result  
 
@@ -55,7 +55,7 @@ let test_lighting_eye_opposite_light_offset_45deg _ =
   let pos = point 0. 0. 0. in
   let eyev = vector 0. 0. (-1.) in
   let normalv = vector 0. 0. (-1.) in
-  let light = point_light (point 0. 10. (-10.)) (white ()) in
+  let light = point_light (point 0. 10. (-10.)) (white ) in
   let result = lighting m light pos eyev normalv false in
   assert_bool "lighting eye oppo" (color_equal {r=0.7364; g=0.7364; b=0.7364} result)
 
@@ -65,7 +65,7 @@ let test_lighting_eye_in_path_of_reflection _ =
   let pos = point 0. 0. 0. in
   let eyev = vector 0. negdeg45 negdeg45 in
   let normalv = vector 0. 0. (-1.) in
-  let light = point_light (point 0. 10. (-10.)) (white ()) in
+  let light = point_light (point 0. 10. (-10.)) (white) in
   let result = lighting m light pos eyev normalv false in
   assert_bool "eye in path" (color_equal {r=1.6364; g=1.6364; b=1.6364} result)
 
@@ -74,7 +74,7 @@ let test_light_behind_surface _ =
   let pos = point 0. 0. 0. in
   let eyev = vector 0. 0. (-1.) in
   let normalv = vector 0. 0. (-1.) in
-  let light = point_light (point 0. 0. (10.)) (white ()) in
+  let light = point_light (point 0. 0. (10.)) (white) in
   let result = lighting m light pos eyev normalv false in
   assert_equal {r=0.1; g=0.1; b=0.1} result
 
@@ -83,7 +83,7 @@ let test_light_in_shadow _ =
   let pos = point 0. 0. 0. in
   let eyev = vector 0. 0. (-1.) in
   let normalv = vector 0. 0. (-1.) in
-  let light = point_light (point 0. 0. (-10.)) (white ()) in
+  let light = point_light (point 0. 0. (-10.)) (white) in
   let result = lighting m light pos eyev normalv true in
   assert_equal {r=0.1; g=0.1; b=0.1} result  
 

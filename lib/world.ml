@@ -26,7 +26,7 @@ class world =
   method color_at (r : ray) =
     let xs = self#intersect r in
     let _hit = hit xs in
-    if _hit = null_x then black () else (self#shade_hit (prepare_computations _hit r))
+    if _hit = null_x then black else (self#shade_hit (prepare_computations _hit r))
   method is_shadowed (p: tuple) =
     let v = tuple_sub (List.hd _lights).position p in
     let distance = magnitude v in
@@ -40,7 +40,7 @@ end
 
 let default_world (_ : unit) : world =
   let w = new world in
-  let _light = point_light (point (-10.) 10. (-10.)) (white ()) in
+  let _light = point_light (point (-10.) 10. (-10.)) (white) in
   let s1 = new shape Sphere in 
   let m1 = {color={r=0.8; g=1.; b=0.6};
             ambient=0.1; 

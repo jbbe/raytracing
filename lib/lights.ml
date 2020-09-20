@@ -37,7 +37,7 @@ let lighting _material _light _point _eyev _normalv (in_shadow : bool) =
   let light_dot_normal = dot lightv _normalv in
 
   if light_dot_normal < 0. 
-    then color_add (color_add (black ()) (black ())) ambient
+    then color_add (color_add (black) (black)) ambient
     else 
       let diffuse = color_scalar_mult (color_scalar_mult effective_color _material.diffuse) light_dot_normal in
       (* reflect_dot_eye represents the cosine of the angle between the​
@@ -46,7 +46,7 @@ let lighting _material _light _point _eyev _normalv (in_shadow : bool) =
       let reflectv = reflect (scalar_mult lightv (-1.)) _normalv in
       let reflect_dot_eye = dot reflectv _eyev in
       let specular = (if reflect_dot_eye <= 0. 
-        then black () 
+        then black 
         else color_scalar_mult (color_scalar_mult _light.intensity _material.specular) (reflect_dot_eye ** _material.shininess)
       ) in
       if in_shadow then ambient else color_add (color_add ambient diffuse) specular

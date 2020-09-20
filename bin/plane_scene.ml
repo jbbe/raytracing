@@ -87,7 +87,7 @@ let main _ =
   left#set_transform  (matrix_mult (translation (-1.5) 0.33 (-0.75)) (scaling 0.3 0.3 0.3));
   other#set_transform right_transform;
   other#set_material right_mat;
-  w#add_light (point_light (point (-10.) 10. (-10.)) (white ()));
+  w#add_light (point_light (point (-10.) 10. (-10.)) (white);
   w#add_object floor;
   (* w#add_object left_wall;
   w#add_object right_wall; *)

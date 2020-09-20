@@ -14,7 +14,7 @@ let test_create_world _ =
   assert_equal [] (w#lights)
 
 let test_default_world _ =
-  let _light = point_light (point (-10.) 10. (-10.)) (white ()) in
+  let _light = point_light (point (-10.) 10. (-10.)) (white) in
   let s1 = new shape Sphere  in 
   let m1 = {color={r=0.8; g=1.; b=0.6};
             ambient=0.1; 
@@ -111,7 +111,7 @@ let test_no_shadow_obj_behind_point _ =
 
 let test_shade_hit_intersection_in_shadow _ =
   let w = new world in
-  w#add_light (point_light (point 0. 0. (-10.)) (white ()));
+  w#add_light (point_light (point 0. 0. (-10.)) (white));
   w#add_object (new shape Sphere );
   let s2 = new shape Sphere  in
   s2#set_transform (translation 0. 0. 10.);
