@@ -42,11 +42,12 @@ let default_world (_ : unit) : world =
   let w = new world in
   let _light = point_light (point (-10.) 10. (-10.)) (white) in
   let s1 = new shape Sphere in 
-  let m1 = {color={r=0.8; g=1.; b=0.6};
+  let m1 = {
             ambient=0.1; 
             diffuse=0.7;
             specular=0.2;
-          shininess=200.} in
+          shininess=200.;
+          pattern= new pattern Solid [{r=0.8; g=1.; b=0.6}]} in
   s1#set_material m1;
   let s2 = new shape Sphere in
   s2#set_transform (scaling 0.5 0.5 0.5);

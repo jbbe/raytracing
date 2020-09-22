@@ -16,21 +16,26 @@ let test_create_world _ =
 let test_default_world _ =
   let _light = point_light (point (-10.) 10. (-10.)) (white) in
   let s1 = new shape Sphere  in 
-  let m1 = {color={r=0.8; g=1.; b=0.6};
-            ambient=0.1; 
+  let m1 = {ambient=0.1; 
             diffuse=0.7;
             specular=0.2;
-          shininess=200.} in
+          shininess=200.;
+          pattern=new pattern Solid [{r=0.8; g=1.; b=0.6}]} in
   s1#set_material m1;
   let s2 = new shape Sphere  in
   let trans = scaling 0.5 0.5 0.5 in
   s2#set_transform trans;
   let w = default_world () in
   assert_equal w#lights [_light];
+  let test_point = point 0. 0. 1. in
   (* print_spheres w#objects;
+  l
   print_spheres ([s1;s2]); *)
   assert_equal 2 (List.length (w#objects));
-  assert_equal m1 (((List.nth w#objects 0)#material));
+  assert_equal m1.shininess (((List.nth w#objects 0)#material)).shininess;
+  assert_equal m1.specular (((List.nth w#objects 0)#material)).specular;
+  assert_equal m1.ambient (((List.nth w#objects 0)#material)).ambient;
+  assert_equal (m1.pattern#color_at test_point) (((List.nth w#objects 0)#material).pattern#color_at test_point);
   assert_equal trans (((List.nth w#objects 1)#transform))
   (* assert_bool "s2 in w" (((List.nth w#objects 1)#transform) =  trans) *)
 
@@ -87,7 +92,7 @@ let test_color_given_intersection_behind_ray _ =
   let inner = (List.nth w#objects 1) in
   inner#material.ambient <- 1.;
   (* let correct = {r=0; g=0.; b=0.;} in *)
-  assert_equal (w#color_at r) (inner#material.color) 
+  assert_equal (w#color_at r) (inner#color_at (point 0. 0. 0.)) 
 
 let test_no_shadow_collinear _ =
   let w = default_world () in

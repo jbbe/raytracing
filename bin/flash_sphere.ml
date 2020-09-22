@@ -23,11 +23,11 @@ let c = new canvas width height
 
 let s = new shape Sphere 
 (* let m = default_material () *)
-let m = {color={r=0.8; g=0.2; b=1.};
-        ambient=0.1; 
+let m = {ambient=0.1; 
         diffuse=0.9;
         specular=0.9;
-        shininess=20.}
+        shininess=20.
+        pattern=new pattern Solid [{r=0.8; g=1.; b=0.6}]}
 (* m.color <- {r=1.; g=0.2; b=1.}; *)
 
 let light_pos = point (-10.) (-10.) (-10.)

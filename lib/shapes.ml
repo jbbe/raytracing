@@ -1,7 +1,7 @@
+open Color
 open Matrices
-open Tuple
 open Lights
-
+open Tuple
 
 type shape_type = Sphere | Plane
 
@@ -21,6 +21,7 @@ class shape shape_type_in =
     method set_transform (m :float array array) = _transform <- m
     method transform = _transform
     method set_material (mat: material) = _material <- mat
+    method set_pattern (pat: pattern) = _material.pattern <- pat
     method material = _material
     method normal_at (_point : tuple) : tuple =
       match _shape_type with
@@ -31,5 +32,9 @@ class shape shape_type_in =
         let world_normal = matrix_tuple_mult (transpose trans_inverse) obj_normal in
         normalize {x=world_normal.x; y=world_normal.y; z=world_normal.z; w=0.}
       | Plane -> vector 0. 1. 0.
+   method color_at (world_point: tuple) : color =
+      let obj_point = matrix_tuple_mult (inverse _transform) world_point in
+      let pat_point = matrix_tuple_mult (inverse _material.pattern#transform) obj_point in
+      _material.pattern#color_at pat_point
 end
 
