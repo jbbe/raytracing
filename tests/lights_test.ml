@@ -4,6 +4,7 @@ open Raytracing.Color
 open Raytracing.Shapes
 open Raytracing.Lights
 open Raytracing.Transformations
+open Raytracing.Matrices
 
 let w = white
 let b = black
@@ -164,6 +165,63 @@ let test_double_trans_pat_obj _ =
   let c = obj#color_at (point 1.5 0. 0.) in
   assert_equal c w
 
+let test_pattern_trans _ =
+  let p1 = new pattern Solid [b] in
+  let p2 = new pattern Stripe [b; w] in
+  assert_equal p1#transform identity_matrix;
+  assert_equal p2#transform identity_matrix
+
+
+let test_pattern_assign_trans _ =
+  let p1 = new pattern Solid [b] in
+  let p2 = new pattern Stripe [b; w] in
+  let m = translation 1. 2. 3. in
+  let m2 = scaling 2. 3. 4. in
+  p1#set_transform m;
+  p2#set_transform m2;
+  assert_equal p1#transform m;
+  assert_equal p2#transform m2
+
+(* let test_pat_with_obj_trans _ =
+  let s = new shape Sphere in
+  s#set_transform (scaling 2. 2. 2.);
+  let pat = new pattern Stripe [w; b;]
+  s#set_pattern pat;
+  let c = s#color_at (point 2. 3. 4.)
+  assert_equal c {r=1. g=1.5; b=2.} *)
+
+let test_gradient_pattern _ =
+  let pat = new pattern Gradient [w; b] in
+  assert_equal (pat#color_at (point 0. 0. 0.)) w;
+  let c2 = (pat#color_at (point 0.25 0. 0.)) in
+  assert_equal c2 {r=0.75;g=0.75;b=0.75};
+  assert_equal (pat#color_at (point 0.5 0. 0.)) {r=0.5;g=0.5;b=0.5};
+  assert_equal (pat#color_at (point 0.75 0. 0.)) {r=0.25;g=0.25;b=0.25}
+
+let test_ring_pattern _ =
+  let pat = new pattern Ring [w;b] in
+  assert_equal (pat#color_at (point 0. 0. 0.)) w;
+  assert_equal (pat#color_at (point 1. 0. 0.)) b;
+  assert_equal (pat#color_at (point 0. 0. 1.)) b; 
+  assert_equal (pat#color_at (point 0.708 0. 0.708)) b
+
+let test_checkers_in_x _ =
+  let pat = new pattern Checkers [w;b] in
+  assert_equal (pat#color_at (point 0. 0. 0.)) w;
+  assert_equal (pat#color_at (point 0.99 0. 0.)) w;
+  assert_equal (pat#color_at (point 1.01 0. 0.)) b
+
+let test_checkers_in_y _ =
+  let pat = new pattern Checkers [w;b] in
+  assert_equal (pat#color_at (point 0. 0. 0.)) w;
+  assert_equal (pat#color_at (point  0. 0.99 0.)) w;
+  assert_equal (pat#color_at (point 0. 1.01  0.)) b
+
+let test_checkers_in_z _ =
+  let pat = new pattern Checkers [w;b] in
+  assert_equal (pat#color_at (point 0. 0. 0.)) w;
+  assert_equal (pat#color_at (point  0. 0. 0.99 )) w;
+  assert_equal (pat#color_at (point 0. 0. 1.01 )) b
 
 let suite =
   "LightsList" >::: [
@@ -186,6 +244,14 @@ let suite =
     "test_stripes_with_obj_trans" >:: test_stripes_with_obj_trans;
     "test_stripe_with_pat_trans" >:: test_stripe_with_pat_trans;
     "test_double_trans_pat_obj" >:: test_double_trans_pat_obj;
+    "test_pattern_trans" >:: test_pattern_trans;
+    "test_pattern_assign_trans" >:: test_pattern_assign_trans;
+    "test_gradient_pattern" >:: test_gradient_pattern;
+    "test_ring_pattern" >:: test_ring_pattern;
+    "test_checkers_in_x" >:: test_checkers_in_x;
+    "test_checkers_in_y" >:: test_checkers_in_y;
+    "test_checkers_in_z" >:: test_checkers_in_z;
+    (* "test_pat_with_obj_trans" >:: test_pat_with_obj_trans; *)
   ]
 
 let () =
