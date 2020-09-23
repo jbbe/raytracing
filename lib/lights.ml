@@ -11,7 +11,7 @@ class pattern pattern_type_in colors_in =
  object (self)
     val _pattern_type : pattern_type = pattern_type_in
     val mutable _colors = colors_in
-    val mutable _transform = make_identity ()
+    val mutable _transform = identity_matrix
     method pattern_type = _pattern_type
     method set_transform (m :float array array) = _transform <- m
     method add_transform (m :float array array) = _transform <- matrix_mult _transform m
@@ -94,9 +94,10 @@ let stripe_pattern a_color b_color =
   new pattern Stripe [a_color; b_color]
 
 
-let lighting _material _light _point _eyev _normalv (in_shadow : bool) =
+let lighting _object _light _point _eyev _normalv (in_shadow : bool) =
   (* combine surface color with the light's color/intensity *)
-  let _color = color_at _material _point in
+  let _color = _object#color_at _point in
+  let _material = _object#material in
   let effective_color = schur_prod _color _light.intensity in
 
   (* find the direction of light source *)

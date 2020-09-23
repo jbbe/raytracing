@@ -33,8 +33,8 @@ class shape shape_type_in =
         normalize {x=world_normal.x; y=world_normal.y; z=world_normal.z; w=0.}
       | Plane -> vector 0. 1. 0.
    method color_at (world_point: tuple) : color =
-      let obj_point = matrix_tuple_mult (inverse _transform) world_point in
-      let pat_point = matrix_tuple_mult (inverse _material.pattern#transform) obj_point in
-      _material.pattern#color_at pat_point
+      let object_point = matrix_tuple_mult (inverse _transform) world_point in
+      let pattern_point = matrix_tuple_mult (inverse _material.pattern#transform) object_point in
+      _material.pattern#color_at pattern_point
 end
 

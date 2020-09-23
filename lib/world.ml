@@ -22,7 +22,7 @@ class world =
     List.sort intersection_comp (intersections_on_list _objects r) 
   method shade_hit (comps : computations) =
     let shadowed = self#is_shadowed comps.over_point in
-    lighting ((!(comps.obj))#material) (List.hd _lights) comps.point comps.eyev comps.normalv shadowed
+    lighting (!(comps.obj)) (List.hd _lights) comps.point comps.eyev comps.normalv shadowed
   method color_at (r : ray) =
     let xs = self#intersect r in
     let _hit = hit xs in
