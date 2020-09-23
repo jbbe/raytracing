@@ -86,9 +86,6 @@ let material_equal m1 m2 : bool =
     && (pattern_equal m1.pattern m2.pattern)
 
 
-let color_at mat _point  =
-  mat.pattern#color_at _point
-
 
 let stripe_pattern a_color b_color =
   new pattern Stripe [a_color; b_color]
