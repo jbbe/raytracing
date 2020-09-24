@@ -1,11 +1,20 @@
 open Tuple
 
-let print_float_newline f =
-  print_float f;
-  print_newline ()
-  
+let print_float_space f =
+  Printf.printf "%f, " f;
+  ()
+
+let print_one_d_array_then_newline (row : float array) =
+    Printf.printf "[ ";
+    let () = row |> (Array.iter print_float_space) in
+    Printf.printf "]\n ";
+    ()
+
+
 let print_matrix m =
-    let () = m |> Array.iter (Array.iter print_float_newline) in
+    Printf.printf "[ ";
+    let () = m |> Array.iter print_one_d_array_then_newline in
+    Printf.printf "]\n ";
     ()
 
 

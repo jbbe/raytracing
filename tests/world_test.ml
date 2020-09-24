@@ -20,6 +20,7 @@ let test_default_world _ =
             diffuse=0.7;
             specular=0.2;
           shininess=200.;
+    reflective=0.;
           pattern=new pattern Solid [{r=0.8; g=1.; b=0.6}]} in
   s1#set_material m1;
   let s2 = new shape Sphere  in
@@ -128,6 +129,79 @@ let test_shade_hit_intersection_in_shadow _ =
   assert_equal c ({r=0.1; g=0.1; b=0.1})
 
 
+let test_nonreflective_reflection _ =
+  let w = default_world () in
+  let r = {origin=(point 0. 0. 0.); direction=(vector 0. 0. 1.)} in
+  let s = List.nth (w#objects) 1 in
+  s#material.ambient <- 1.;
+  let i = {t=1.; obj=(ref s)} in
+  let comps = prepare_computations i r in
+  let c = w#reflected_color comps in
+  assert_equal black c
+
+let test_reflected_color _ =
+  let w = default_world () in
+  let s = new shape Plane in
+  s#material.reflective <- 0.5;
+  s#set_transform (translation 0. (-1.) 0.);
+  w#add_object s;
+  let deg45 = (sqrt 2.) /. 2. in
+  let r = {origin=(point 0. 0. (-3.)); direction=(vector 0. ((-1.) *. deg45) deg45)} in
+  let i = {t=(sqrt 2.); obj=(ref s)} in
+  let comps = prepare_computations i r in
+  (* Printf.printf "\n\ntest reflected color\n"; *)
+  let c = w#reflected_color comps in
+  (* Printf.printf "\n\nReflected color calculated ************\n"; *)
+
+  (* print_computations comps; *)
+  (* print_color c; *)
+  (* w#print_world; *)
+  assert_bool "reflecting" (color_equal {r=0.19032; g=0.2379; b=0.14274} c)
+
+let test_shade_hit_with_reflective _ =
+  let w = default_world () in
+  let s = new shape Plane in
+  s#material.reflective <- 0.5;
+  s#set_transform (translation 0. (-1.) 0.);
+  w#add_object s;
+  let deg45 = (sqrt 2.) /. 2. in
+  let r = {origin=(point 0. 0. (-3.)); direction=(vector 0. ((-1.) *. deg45) deg45)} in
+  let i = {t=(sqrt 2.); obj=(ref s)} in
+  let comps = prepare_computations i r in
+  (* Printf.printf "\n\ntest shade_hit with reflective begin shade_hit ************\n"; *)
+  let c = w#shade_hit comps in
+  (* Printf.printf "\n\ntest shade_hit with reflective returns ************\n"; *)
+  (* print_color c; *)
+  assert_bool "reflecting" (color_equal {r=0.87677; g=0.92436; b=0.82918} c) 
+
+let test_recursion_ends _ =
+  let w = new world in
+  w#add_light (point_light (point 0. 0. 0.) white);
+  let lower = new shape Plane in
+  lower#material.reflective <- 1.;
+  lower#set_transform (translation 0. (-1.) 0.);
+  let upper = new shape Plane in
+  upper#material.reflective <- 1.;
+  upper#set_transform (translation 0. (1.) 0.);
+  w#add_object lower;
+  w#add_object upper;
+  let r = {origin=(point 0. 0. 0.); direction=(vector 0. 1. 0.)} in
+  let c = (w#color_at r) in
+  assert_equal c c 
+
+let test_reflection_in_the_depths _ =
+  let w = default_world () in
+  let s = new shape Plane in
+  s#material.reflective <- 0.5;
+  s#set_transform (translation 0. (-1.) 0.);
+  w#add_object s;
+  let deg45 = (sqrt 2.) /. 2. in
+  let r = {origin=(point 0. 0. (-3.)); direction=(vector 0. ((-1.) *. deg45) deg45)} in
+  let i = {t=(sqrt 2.); obj=(ref s)} in
+  let comps = prepare_computations i r in
+  let c = w#reflected_color ~remaining:0 comps in
+  print_color c;
+  assert_equal c black
 
 let suite =
   "WorldList" >::: [
@@ -144,6 +218,11 @@ let suite =
     "test_no_shadow_obj_behind_light" >:: test_no_shadow_obj_behind_light;
     "test_no_shadow_obj_behind_point" >:: test_no_shadow_obj_behind_point;
     "test_shade_hit_intersection_in_shadow" >:: test_shade_hit_intersection_in_shadow;
+    "test_nonreflective_reflection" >:: test_nonreflective_reflection;
+    "test_reflected_color" >:: test_reflected_color;
+    "test_shade_hit_with_reflective" >:: test_shade_hit_with_reflective;
+    "test_recursion_ends" >:: test_recursion_ends;
+    "test_reflection_in_the_depths" >:: test_reflection_in_the_depths;
 
   ]
 

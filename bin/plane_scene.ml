@@ -7,8 +7,8 @@ open Raytracing.Color
 open Raytracing.Lights
 open Raytracing.World
 
-let width = 600
-let height = 300
+let width = 1000
+let height = 500
 
 
 let color = {r=0.; g=1.;b=0.}
@@ -37,6 +37,7 @@ let floor_mat = {
         diffuse=0.9;
         specular=0.;
         shininess=20.;
+        reflective=1.;
         pattern=new pattern Gradient [(get_random_color ()); white] }
 
 
@@ -58,29 +59,32 @@ let left_wall_trans = matrix_mult (matrix_mult
 let right_transform =  (matrix_mult (translation (-1.5) 0.33 (-0.75)) (scaling 0.3 0.3 0.5))
 
 let main _ =
-  Random.init 10;
+  Random.init 8;
   let middle_mat = {
         ambient=0.1; 
         diffuse=0.7;
         specular=0.3;
         shininess=2.;
+        reflective=1.;
         pattern=new pattern Checkers [(get_random_color ()); (get_random_color_b ())]} in
   let right_mat = {
         ambient=0.1; 
         diffuse=0.7;
         specular=0.3;
         shininess=20.;
+        reflective=0.6;
         pattern=new pattern Ring [(get_random_color_b ()); (get_random_color ())] } in
-  let left_mat = {
+  (* let left_mat = {
         ambient=0.1; 
         diffuse=0.7;
         specular=0.3;
         shininess=200.;
 
-        pattern=new pattern Checkers [(get_random_color_b ()); (get_random_color_b ())]} in
+        pattern=new pattern Checkers [(get_random_color_b ()); (get_random_color_b ())]} in *)
+  floor_mat.pattern#set_transform (matrix_mult shear (scaling 20. 5. 20.));
   (* middle_mat.pattern#set_transform (matrix_mult (shearing 0.2 0. 3. 0.1 0. 0.2) (scaling 0.01 0.03 0.5)); *)
   (* middle_mat.pattern#set_transform scali *)
-  middle_mat.pattern#set_transform (scaling 0.1 0.5 1.4);
+  middle_mat.pattern#set_transform (scaling 0.2 0.2 0.2);
   (* print_matrix middle_mat.pattern#transform; *)
   (* floor#set_transform (scaling 10. 0.01 10.); *)
   ceiling#set_transform (translation 0. 5. 2.);
@@ -90,13 +94,13 @@ let main _ =
   left_wall#set_material floor_mat;
   right_wall#set_transform right_wall_trans;
   right_wall#set_material floor_mat; *)
-  middle#set_transform (translation (-0.5) 1.5 0.5);
+  middle#set_transform (matrix_mult (translation (-0.5) 1.5 0.5) (scaling 1.3 1.3 1.3));
   middle#set_material middle_mat;
   right#set_material right_mat;
   right#set_transform (matrix_mult (translation 1.5 0.5 (-0.5)) (scaling 0.5 0.5 0.5));
   right#set_transform (matrix_mult (translation 1. 0.25 (-0.5)) shear);
-  left#set_material left_mat;
-  left#set_transform  (matrix_mult (translation (-1.5) 0.33 (-0.75)) (scaling 0.3 0.3 0.3));
+  (* left#set_material left_mat; *)
+  (* left#set_transform  (matrix_mult (translation (-1.5) 0.33 (-0.75)) (scaling 0.3 0.3 0.3)); *)
   other#set_transform right_transform;
   other#set_material right_mat;
   w#add_light (point_light (point (-10.) 10. (-10.)) white);
@@ -104,12 +108,12 @@ let main _ =
   (* w#add_object left_wall;
   w#add_object right_wall; *)
   w#add_object middle;
-  w#add_object right;
-  w#add_object left;
+  (* w#add_object right; *)
+  (* w#add_object left; *)
   w#add_object other;
   c#set_transform (view_transform (point 0. 1.5 (-5.)) (point 0. 1. 0.) (vector 0. 1. (0.)));
   let img = c#render w in
-  let filename = Printf.sprintf "creations/scene %d .ppm" (Random.int 574) in
+  let filename = Printf.sprintf "creations/scene %d .ppm" (Random.int 573) in
   img#to_file filename;
   ()
 

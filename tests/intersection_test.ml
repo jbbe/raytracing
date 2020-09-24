@@ -44,7 +44,13 @@ let test_acne_free _ =
   assert_bool "over by less than epsilon over 2" (comps.over_point.z < (_EPSILON /. (-2.)));
   assert_bool "over by less than epsilon over 2" (comps.point.z > comps.over_point.z)
 
-
+let test_comp_reflectv _ =
+  let s = new shape Plane in
+  let deg45 = (sqrt 2.) /. 2. in
+  let r = {origin=(point 0. 1. (-1.)); direction=(vector 0. ((-1.) *. deg45) deg45)} in
+  let i = {t=deg45; obj=(ref s)} in
+  let comps = prepare_computations i r in
+  assert_equal (vector 0. deg45 deg45) comps.reflectv
 
 let suite =
   "LightsList" >::: [
@@ -52,6 +58,7 @@ let suite =
     "interection_occurs_on_outside" >:: interection_occurs_on_outside;
     "interection_occurs_on_inside" >:: interection_occurs_on_inside;
     "test_acne_free" >:: test_acne_free;
+    "test_comp_reflectv" >:: test_comp_reflectv;
 
   ]
 

@@ -12,3 +12,14 @@
     (name plane_scene)
     (modules plane_scene)
     (libraries raytracing))
+
+(executable
+    (name reflective_scene)
+    (modules reflective_scene)
+    (libraries raytracing))
+
+
+(executable
+    (name play)
+    (modules play)
+    (libraries raytracing))

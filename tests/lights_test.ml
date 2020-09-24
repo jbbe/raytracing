@@ -1,10 +1,10 @@
 open OUnit2
-open Raytracing.Tuple
 open Raytracing.Color
-open Raytracing.Shapes
 open Raytracing.Lights
-open Raytracing.Transformations
 open Raytracing.Matrices
+open Raytracing.Shapes
+open Raytracing.Transformations
+open Raytracing.Tuple
 
 let w = white
 let b = black
@@ -138,6 +138,7 @@ let test_light_pattern _ =
     diffuse=0.;
     specular=0.;
     shininess=200.;
+    reflective=0.;
     pattern=(new pattern Stripe [white; black]);
     } in
 
@@ -248,6 +249,13 @@ let test_checkers_in_z _ =
   assert_equal (pat#color_at (point  0. 0. 0.99 )) w;
   assert_equal (pat#color_at (point 0. 0. 1.01 )) b
 
+let test_reflective_material_attr _ =
+  let m = default_material () in
+  assert_equal 0.0  m.reflective
+
+
+
+
 let suite =
   "LightsList" >::: [
     "test_point_light_basic" >:: test_point_light_basic;
@@ -278,6 +286,12 @@ let suite =
     "test_checkers_in_y" >:: test_checkers_in_y;
     "test_checkers_in_z" >:: test_checkers_in_z;
     (* "test_pat_with_obj_trans" >:: test_pat_with_obj_trans; *)
+    "test_checkers_in_z" >:: test_checkers_in_z;
+    "test_checkers_in_z" >:: test_checkers_in_z;
+    "test_checkers_in_z" >:: test_checkers_in_z;
+    "test_checkers_in_z" >:: test_checkers_in_z;
+    "test_reflective_material_attr" >:: test_reflective_material_attr;
+    
   ]
 
 let () =
