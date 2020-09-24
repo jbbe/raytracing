@@ -22,40 +22,24 @@ class world =
     List.sort intersection_comp (intersections_on_list _objects r) 
   method shade_hit ?(remaining=10) (comps : computations) =
     if remaining <= 0 then black else
-
+    
     let _obj = (!(comps.obj)) 
     and _light = (List.hd _lights) 
     and _over_point = comps.over_point 
     and _eyev = comps.eyev 
     and _normalv = comps.normalv in
-    (* Printf.printf "Shade hit enter\n"; *)
-
+    
     let shadowed = self#is_shadowed comps.over_point in
-
-
     let surface = lighting _obj _light _over_point _eyev _normalv shadowed in
     let reflected = self#reflected_color ~remaining:(remaining - 1) comps  in
-
-    (* Printf.printf "Shade hit return surface then reflected:\n"; 
-    print_color surface;
-    print_color reflected; *)
-
     color_add surface reflected
   method color_at ?(remaining=10) (r : ray)  =
     if remaining <= 0 then black else
     let xs = self#intersect r in
     let _hit = hit xs in
-    (* Printf.printf "world#Color at enter\n";
-    print_intersections xs;
-    Printf.printf "\n_hit vvvvvv \n"; 
- 
-    print_intersection _hit; *)
-    (* Printf.printf "\n ^^^^^^^^^^^ \n\n\n";  *)
     if _hit = null_x 
       then black 
       else let comps = prepare_computations _hit r in
-      (* Printf.printf "world#Color at computations:  "; *)
-      (* print_computations comps; *)
       self#shade_hit ~remaining:(remaining - 1) comps 
   method is_shadowed (p: tuple) =
     let v = tuple_sub (List.hd _lights).position p in
@@ -66,12 +50,9 @@ class world =
     (h <> null_x && h.t < distance)
   method reflected_color ?(remaining=10) (comps : computations) =
     let reflectivity = (!(comps.obj))#material.reflective in
-    (* if  (reflectivity <= _EPSILON || remaining <= 0) then (Printf.printf "\nreflected color returning black"; black) else *)
     if  (reflectivity <= _EPSILON || remaining <= 0) then  black else
     let reflect_ray = {origin=comps.over_point; direction=comps.reflectv} in
     let c = self#color_at ~remaining:(remaining - 1) reflect_ray  in
-    (* Printf.printf "\nReflected_color color_at returns : \n"; *)
-    (* print_color c; *)
     color_scalar_mult c reflectivity
   method print_world =
     Printf.printf "Print world, Objects:";
