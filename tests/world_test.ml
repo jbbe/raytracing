@@ -295,7 +295,16 @@ let test_the_shlickness _ =
     let c = w#shade_hit ~remaining:5 comps in
     print_color c;
     assert_bool "shade_hit schlickness" (color_equal c {r=0.93391; g= 0.69643; b=0.69243})
-  
+ 
+let test_no_cast_no_shadow_ _ =
+  let w = default_world () in
+  let a = List.nth w#objects 0 in
+  let b = List.nth w#objects 1 in
+  a#set_casts_shadow false;
+  b#set_casts_shadow false;
+  b#material.transparency  <- 1.;
+  let p = point 10. (-10.) 10. in
+  assert_equal false (w#is_shadowed p)
 
 let suite =
   "WorldList" >::: [
@@ -323,6 +332,7 @@ let suite =
     "test_refract_general" >:: test_refract_general;
     "test_shade_hit_transparent" >:: test_shade_hit_transparent;
     "test_the_shlickness" >:: test_the_shlickness;
+    "test_no_cast_no_shadow_" >:: test_no_cast_no_shadow_;
 
   ]
 

@@ -10,6 +10,7 @@ type pattern_type = Solid | Stripe | Gradient | Ring | Checkers | Test
 
 class pattern pattern_type_in colors_in =
  object (self)
+    
     val _pattern_type : pattern_type = pattern_type_in
     val mutable _colors = colors_in
     val mutable _transform = identity_matrix

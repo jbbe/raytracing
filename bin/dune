@@ -28,3 +28,8 @@
     (name sphere_within_a_sphere)
     (modules sphere_within_a_sphere)
     (libraries raytracing))
+
+(executable
+    (name underwater)
+    (modules underwater)
+    (libraries raytracing))

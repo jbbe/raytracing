@@ -57,8 +57,9 @@ class world =
     let r = {origin=p; direction=(normalize v)} in
     let xs = self#intersect r in
     (* Check if any hits are + shadow producing objects hit *)
-    let h = hit xs in
-    (h <> null_x && h.t < distance)
+    intersection_casts_shadow xs distance
+    (* let h = hit xs in
+    (h <> null_x && h.t < distance) *)
   method reflected_color ?(remaining=10) (comps : computations) =
     let reflectivity = (!(comps.obj))#material.reflective in
     if  (reflectivity <= _EPSILON || remaining <= 0) then  black else

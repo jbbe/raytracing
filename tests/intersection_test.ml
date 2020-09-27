@@ -130,7 +130,55 @@ let test_reflectance_n2_g_n1 _ =
   let reflectance = schlick comps in
   assert_bool "refl"  (( Float.abs(0.48873 -. reflectance )) < _EPSILON)
 
+let test_cast_shadow _ =
+  let s = glass_sphere () in
+  s#set_casts_shadow false;
+  let xs =  [{t=(1.8589); obj=(ref s)};] in
+  assert_equal false (intersection_casts_shadow xs 20.)
 
+let test_cast_shadow_2 _ =
+  let s = glass_sphere () in
+  let xs =  [{t=(1.8589); obj=(ref s)};] in
+  assert_equal true (intersection_casts_shadow xs 20.)
+
+let test_cast_shadow_long_list_true _ =
+  let a = glass_sphere () in
+  a#set_transform (scaling 2. 2. 2.);
+  a#material.refractive_idx <-1.5;
+  let b = glass_sphere () in
+  b#set_casts_shadow false;
+  b#set_transform (translation 0. 0. (-0.25));
+  b#material.refractive_idx <-2.0;
+  let c = glass_sphere () in
+  c#set_casts_shadow false;
+  (* let r = {origin=(point 0. 0. (-4.)); direction=(vector 0. 0. 1.)} in *)
+  let xs = [{t=2.;obj=(ref a)}; 
+     {t=2.75; obj=(ref b)}; 
+      {t=3.25; obj=(ref c)}; 
+      {t=4.75; obj=(ref b)}; 
+      {t=5.25;obj=(ref c)}; 
+      {t=6.; obj=(ref a)};] in
+  assert_equal true (intersection_casts_shadow xs 20.)
+
+let test_cast_shadow_long_list_false _ =
+  let a = glass_sphere () in
+  a#set_transform (scaling 2. 2. 2.);
+  a#material.refractive_idx <-1.5;
+  let b = glass_sphere () in
+  b#set_casts_shadow false;
+  a#set_casts_shadow false;
+  b#set_transform (translation 0. 0. (-0.25));
+  b#material.refractive_idx <-2.0;
+  let c = glass_sphere () in
+  c#set_casts_shadow false;
+  (* let r = {origin=(point 0. 0. (-4.)); direction=(vector 0. 0. 1.)} in *)
+  let xs = [{t=2.;obj=(ref a)}; 
+     {t=2.75; obj=(ref b)}; 
+      {t=3.25; obj=(ref c)}; 
+      {t=4.75; obj=(ref b)}; 
+      {t=5.25;obj=(ref c)}; 
+      {t=6.; obj=(ref a)};] in
+  assert_equal false (intersection_casts_shadow xs 20.)
 
 let suite =
   "LightsList" >::: [
@@ -144,6 +192,10 @@ let suite =
     "test_shlick_total" >:: test_shlick_total;
     "test_perpendicular_reflectance" >:: test_perpendicular_reflectance;
     "test_reflectance_n2_g_n1" >:: test_reflectance_n2_g_n1;
+    "test_cast_shadow" >:: test_cast_shadow;
+    "test_cast_shadow_2" >:: test_cast_shadow_2;
+    "test_cast_shadow_long_list_true" >:: test_cast_shadow_long_list_true;
+    "test_cast_shadow_long_list_false" >:: test_cast_shadow_long_list_false;
 
   ]
 

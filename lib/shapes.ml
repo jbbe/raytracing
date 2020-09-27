@@ -14,6 +14,7 @@ class shape shape_type_in =
   object 
     val _id = unique ()
     val _shape_type : shape_type = shape_type_in
+    val mutable _casts_shadow = true;
     val mutable _transform = make_identity ()
     val mutable _material = default_material ()
     method id = _id
@@ -23,6 +24,8 @@ class shape shape_type_in =
     method set_material (mat: material) = _material <- mat
     method set_pattern (pat: pattern) = _material.pattern <- pat
     method material = _material
+    method casts_shadow = _casts_shadow
+    method set_casts_shadow cast_in = _casts_shadow <- cast_in
     method normal_at (_point : tuple) : tuple =
       match _shape_type with
       | Sphere -> 

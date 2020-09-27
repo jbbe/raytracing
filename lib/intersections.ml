@@ -143,3 +143,10 @@ let schlick comps : float=
         r_0 +. ((1. -. r_0) *. ((1. -. cos_t) ** 5.))
     )
   else r_0 +. ((1. -. r_0) *. ((1. -. cos_eye_normal) ** 5.))
+
+let rec intersection_casts_shadow (xs : intersection list) (distance: float)=
+  match xs with
+  | first::rest -> if (!(first.obj))#casts_shadow && first.t >= 0. && first.t < distance
+     then true 
+     else intersection_casts_shadow rest distance
+  | [] -> false

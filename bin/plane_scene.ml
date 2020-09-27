@@ -121,7 +121,7 @@ let main _ =
   w#add_object other;
   c#set_transform (view_transform (point 0. 1.5 (-5.)) (point 0. 1. 0.) (vector 0. 1. (0.)));
   let img = c#render w in
-  let filename = Printf.sprintf "creations/scene  %d .ppm" 87 in
+  let filename = Printf.sprintf "creations/scene  %d .ppm" 1899 in
   img#to_file filename;
   ()
 
