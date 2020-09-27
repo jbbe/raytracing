@@ -27,7 +27,7 @@ let left = new shape Sphere
 let other = new shape Sphere 
 (* let m = default_material () *)
 let get_random_color _ =
-  {r=Random.float 0.5; g=Random.float 0.8; b=Random.float 0.8;}
+  {r=Random.float 0.2; g=Random.float 0.6; b=Random.float 0.8;}
 
   let get_random_color_b _ =
   {r=Random.float 1.; g=Random.float 0.3; b=Random.float 0.6;}
@@ -35,9 +35,11 @@ let get_random_color _ =
 let floor_mat = {
         ambient=0.1; 
         diffuse=0.9;
-        specular=0.;
-        shininess=20.;
-        reflective=1.;
+        specular=1.;
+        shininess=320.;
+        refractive_idx=1.3;
+        transparency=0.5;
+        reflective=0.9;
         pattern=new pattern Gradient [(get_random_color ()); white] }
 
 
@@ -59,13 +61,15 @@ let left_wall_trans = matrix_mult (matrix_mult
 let right_transform =  (matrix_mult (translation (-1.5) 0.33 (-0.75)) (scaling 0.3 0.3 0.5))
 
 let main _ =
-  Random.init 8;
+  Random.init 99;
   let middle_mat = {
         ambient=0.1; 
         diffuse=0.7;
         specular=0.3;
         shininess=2.;
         reflective=1.;
+        refractive_idx=3.2;
+        transparency=0.7;
         pattern=new pattern Checkers [(get_random_color ()); (get_random_color_b ())]} in
   let right_mat = {
         ambient=0.1; 
@@ -73,6 +77,8 @@ let main _ =
         specular=0.3;
         shininess=20.;
         reflective=0.6;
+        refractive_idx=0.3;
+        transparency=0.5;
         pattern=new pattern Ring [(get_random_color_b ()); (get_random_color ())] } in
   (* let left_mat = {
         ambient=0.1; 
@@ -105,6 +111,8 @@ let main _ =
   other#set_material right_mat;
   w#add_light (point_light (point (-10.) 10. (-10.)) white);
   w#add_object floor;
+  let g = glass_sphere () in
+  w#add_object g;
   (* w#add_object left_wall;
   w#add_object right_wall; *)
   w#add_object middle;
@@ -113,7 +121,7 @@ let main _ =
   w#add_object other;
   c#set_transform (view_transform (point 0. 1.5 (-5.)) (point 0. 1. 0.) (vector 0. 1. (0.)));
   let img = c#render w in
-  let filename = Printf.sprintf "creations/scene %d .ppm" (Random.int 573) in
+  let filename = Printf.sprintf "creations/scene  %d .ppm" 87 in
   img#to_file filename;
   ()
 

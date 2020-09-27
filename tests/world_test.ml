@@ -20,6 +20,8 @@ let test_default_world _ =
             diffuse=0.7;
             specular=0.2;
           shininess=200.;
+    transparency=0.0;
+    refractive_idx=1.0;
     reflective=0.;
           pattern=new pattern Solid [{r=0.8; g=1.; b=0.6}]} in
   s1#set_material m1;
@@ -57,7 +59,7 @@ let test_shadeing_intersection _ =
   let r = {origin=(point 0. 0. (-5.)); direction=(vector 0. 0. 1.)} in
   let s = (List.hd w#objects ) in
   let i =  {t=4.;obj=(ref s)} in
-  let comps = prepare_computations i r in
+  let comps = prepare_computations i r [i] in
   let c = w#shade_hit comps in
   (* print_color c; *)
   assert_bool "shading test 1" (color_equal c {r=0.38066; g=0.47583; b=0.2855;})
@@ -68,8 +70,8 @@ let test_shadeing_intersection_from_inside _ =
   let r = {origin=(point 0. 0. (0.)); direction=(vector 0. 0. 1.)} in
   let s = (List.nth w#objects 1) in
   let i =  {t=0.5; obj=(ref s)} in
-  let comps = prepare_computations i r in
-  let c = w#shade_hit comps in
+  let comps = prepare_computations i r [i] in
+  let c = w#shade_hit comps  in
   (* print_color c; *)
   assert_bool "shading test 2" (color_equal c {r=0.90498; g=0.90498; b=0.90498;})
 
@@ -124,7 +126,7 @@ let test_shade_hit_intersection_in_shadow _ =
   w#add_object s2;
   let r = {origin=(point 0. 0. 5.); direction=(vector 0. 0. 1.)} in
   let i = {t=4.; obj=(ref s2)} in
-  let comps = prepare_computations i r in
+  let comps = prepare_computations i r [i] in
   let c = w#shade_hit comps in
   assert_equal c ({r=0.1; g=0.1; b=0.1})
 
@@ -135,7 +137,7 @@ let test_nonreflective_reflection _ =
   let s = List.nth (w#objects) 1 in
   s#material.ambient <- 1.;
   let i = {t=1.; obj=(ref s)} in
-  let comps = prepare_computations i r in
+  let comps = prepare_computations i r [i] in
   let c = w#reflected_color comps in
   assert_equal black c
 
@@ -148,7 +150,7 @@ let test_reflected_color _ =
   let deg45 = (sqrt 2.) /. 2. in
   let r = {origin=(point 0. 0. (-3.)); direction=(vector 0. ((-1.) *. deg45) deg45)} in
   let i = {t=(sqrt 2.); obj=(ref s)} in
-  let comps = prepare_computations i r in
+  let comps = prepare_computations i r [i] in
   (* Printf.printf "\n\ntest reflected color\n"; *)
   let c = w#reflected_color comps in
   (* Printf.printf "\n\nReflected color calculated ************\n"; *)
@@ -167,7 +169,7 @@ let test_shade_hit_with_reflective _ =
   let deg45 = (sqrt 2.) /. 2. in
   let r = {origin=(point 0. 0. (-3.)); direction=(vector 0. ((-1.) *. deg45) deg45)} in
   let i = {t=(sqrt 2.); obj=(ref s)} in
-  let comps = prepare_computations i r in
+  let comps = prepare_computations i r [i] in
   (* Printf.printf "\n\ntest shade_hit with reflective begin shade_hit ************\n"; *)
   let c = w#shade_hit comps in
   (* Printf.printf "\n\ntest shade_hit with reflective returns ************\n"; *)
@@ -198,10 +200,102 @@ let test_reflection_in_the_depths _ =
   let deg45 = (sqrt 2.) /. 2. in
   let r = {origin=(point 0. 0. (-3.)); direction=(vector 0. ((-1.) *. deg45) deg45)} in
   let i = {t=(sqrt 2.); obj=(ref s)} in
-  let comps = prepare_computations i r in
+  let comps = prepare_computations i r [i] in
   let c = w#reflected_color ~remaining:0 comps in
   print_color c;
   assert_equal c black
+
+let test_refracting_opacity _ =
+  let w = default_world () in
+  let s = List.nth w#objects 0 in
+  let r = {origin=(point 0. 0. (-5.)); direction=(vector 0. 0. 1.)} in
+  let xs = [{t=4.; obj=(ref s)}; {t=6.; obj=(ref s)}] in
+  let comps = prepare_computations (List.hd xs) r xs in
+  let c = w#refracted_color comps  in
+  assert_equal c black
+
+let test_refracted_col_at_depth _ =
+  let w = default_world () in
+  let s = List.nth w#objects 0 in
+  s#material.transparency <- 1.;
+  s#material.refractive_idx <- 1.5;
+  let r = {origin=(point 0. 0. (-5.)); direction=(vector 0. 0. 1.)} in
+  let xs = [{t=4.; obj=(ref s)}; {t=6.; obj=(ref s)}] in
+  let comps = prepare_computations (List.hd xs) r xs in
+  let c = w#refracted_color ~remaining:0 comps in
+  assert_equal c black
+
+let test_total_internal_reflection _ =
+  let w = default_world () in
+  let s = List.nth w#objects 0 in
+  s#material.transparency <- 1.;
+  s#material.refractive_idx <- 1.5;
+  let deg45 = (sqrt 2.) /. 2. in
+  let r = {origin=(point 0. 0. deg45); direction=(vector 0. 1. 0.)} in
+  let xs = [{t=((-1.) *. deg45); obj=(ref s)}; {t=deg45; obj=(ref s)}] in
+  let comps = prepare_computations (List.nth xs 1) r xs in
+  let c = w#refracted_color comps in
+  assert_equal c black
+
+let test_refract_general _ =
+  let w = default_world () in
+  let a = List.nth w#objects 0 in
+  a#material.ambient  <- 1.;
+  a#material.pattern <- new pattern Test [white;];
+  let b = List.nth w#objects 1 in
+  b#material.transparency  <- 1.;
+  b#material.refractive_idx <- 1.5;
+  let r = {origin=(point 0. 0. 0.1); direction=(vector 0. 1. 0.)} in
+  let xs = [{t=(-0.9899) ; obj=(ref a)}; 
+            {t=(-0.4899); obj=(ref b)}; 
+            {t=(0.4899); obj=(ref b)};
+            {t=(0.9899); obj=(ref a)};
+            ] in
+  let comps = prepare_computations (List.nth xs 2) r xs in
+  let c = w#refracted_color comps in
+  assert_bool "First reg refract test" (color_equal c {r=0.; g=0.99888; b=0.04725;})
+
+let test_shade_hit_transparent _ =
+    let w = default_world () in
+    let floor = new shape Plane in
+    floor#set_transform (translation 0. (-1.) 0.);
+    floor#material.transparency <- 0.5;
+    floor#material.refractive_idx <- 1.5;
+    w#add_object floor;
+    let ball = new shape Sphere in
+    ball#material.pattern <- new pattern Solid [{r=1.;g=0.;b=0.}];
+    ball#material.ambient <- 0.5;
+    ball#set_transform (translation 0. (-3.5) (-0.5));
+    w#add_object ball;
+    let deg45 = (sqrt 2.) /. 2. in
+    let r = {origin= (point 0. 0. (-3.)); direction=(vector 0. ((-1.) *. deg45) deg45)} in
+    let xs =  [{t=(sqrt 2.); obj=(ref floor)}] in
+    let comps = prepare_computations (List.hd xs) r xs in
+    let c = w#shade_hit ~remaining:5 comps in
+    assert_bool "shade_hit refract" (color_equal c {r=0.93642; g= 0.68642; b=0.68642})
+
+let test_the_shlickness _ =
+    let w = default_world () in
+    let floor = new shape Plane in
+    floor#set_transform (translation 0. (-1.) 0.);
+    floor#material.reflective <- 0.5;
+    floor#material.transparency <- 0.5;
+    floor#material.refractive_idx <- 1.5;
+    w#add_object floor;
+    let ball = new shape Sphere in
+    ball#material.pattern <- new pattern Solid [{r=1.;g=0.;b=0.}];
+    ball#material.ambient <- 0.5;
+    ball#set_transform (translation 0. (-3.5) (-0.5));
+    w#add_object ball;
+    let deg45 = (sqrt 2.) /. 2. in
+    let r = {origin= (point 0. 0. (-3.)); direction=(vector 0. ((-1.) *. deg45) deg45)} in
+    let xs =  [{t=(sqrt 2.); obj=(ref floor)}] in
+    (* print_intersections xs; *)
+    let comps = prepare_computations (List.hd xs) r xs in
+    let c = w#shade_hit ~remaining:5 comps in
+    print_color c;
+    assert_bool "shade_hit schlickness" (color_equal c {r=0.93391; g= 0.69643; b=0.69243})
+  
 
 let suite =
   "WorldList" >::: [
@@ -223,6 +317,12 @@ let suite =
     "test_shade_hit_with_reflective" >:: test_shade_hit_with_reflective;
     "test_recursion_ends" >:: test_recursion_ends;
     "test_reflection_in_the_depths" >:: test_reflection_in_the_depths;
+    "test_refracting_opacity" >:: test_refracting_opacity;
+    "test_refracted_col_at_depth" >:: test_refracted_col_at_depth;
+    "test_total_internal_reflection" >:: test_total_internal_reflection;
+    "test_refract_general" >:: test_refract_general;
+    "test_shade_hit_transparent" >:: test_shade_hit_transparent;
+    "test_the_shlickness" >:: test_the_shlickness;
 
   ]
 

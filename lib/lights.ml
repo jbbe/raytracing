@@ -6,7 +6,7 @@ open Printf
 
 type light = {intensity:color; position:tuple}
 
-type pattern_type = Solid | Stripe | Gradient | Ring | Checkers
+type pattern_type = Solid | Stripe | Gradient | Ring | Checkers | Test
 
 class pattern pattern_type_in colors_in =
  object (self)
@@ -36,6 +36,7 @@ class pattern pattern_type_in colors_in =
                     + (int_of_float (Float.abs _point.y)) 
                     + (int_of_float (Float.abs _point.z))) in
                  if (dist mod 2) = 0 then self#first_color else self#second_color
+      | Test -> {r=_point.x; g= _point.y; b=_point.z}
 end
 
 
@@ -45,6 +46,8 @@ type material = {
   mutable specular: float;
   mutable shininess: float;
   mutable reflective: float;
+  mutable transparency: float;
+  mutable refractive_idx: float;
   mutable pattern: pattern;
 }
 
@@ -62,7 +65,9 @@ let default_material _ =
     diffuse=0.9;
     specular=0.9;
     shininess=200.;
-    reflective=0.;
+    reflective=0.0;
+    transparency=0.0;
+    refractive_idx=1.0;
     pattern=(new pattern Solid [{r=1.; g=1.; b=1.}]);
     }
 
@@ -83,6 +88,9 @@ let pattern_equal p1 p2 : bool =
   | Checkers -> (match p2#pattern_type with 
       | Checkers -> (p1#first_color = p2#first_color) && (p1#first_color = p2#first_color)
       | _ -> false)
+  | Test -> (match p2#pattern_type with 
+      | Test -> true
+      | _ -> false)
   
 
 let material_equal m1 m2 : bool =
@@ -101,10 +109,11 @@ let pattern_type_as_string p =
   | Stripe -> "stripe" 
   | Ring -> "ring"
   | Gradient -> "gradient"
+  | Test -> "test"
 
 let print_material m =
-  printf "\nMaterial ambient= %f spec = %f diff = %f shiny= %f reflec= %f pattern = %s " 
-     m.ambient m.specular m.diffuse m.shininess m.reflective (pattern_type_as_string (m.pattern#pattern_type));
+  printf "\nMaterial ambient= %f spec = %f diff = %f shiny= %f reflec= %f refrac= %f transparency= %f  pattern = %s " 
+     m.ambient m.specular m.diffuse m.shininess m.reflective m.refractive_idx m.transparency (pattern_type_as_string (m.pattern#pattern_type));
   print_color m.pattern#first_color
 
 

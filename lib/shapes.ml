@@ -44,6 +44,14 @@ class shape shape_type_in =
       print_material _material
 end
 
+let glass_sphere () =
+  let g = new shape Sphere in
+  let m = default_material () in
+  m.transparency <- 1.0;
+  m.refractive_idx <- 1.5;
+  g#set_material m;
+  g
+
 (* let print_shape_refs objs   *)
 let lighting (_object : shape) _light _point _eyev _normalv (in_shadow : bool) =
   (* combine surface color with the light's color/intensity *)

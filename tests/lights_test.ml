@@ -139,6 +139,8 @@ let test_light_pattern _ =
     specular=0.;
     shininess=200.;
     reflective=0.;
+    transparency=0.0;
+    refractive_idx=1.0;
     pattern=(new pattern Stripe [white; black]);
     } in
 
@@ -208,14 +210,33 @@ let test_pattern_assign_trans _ =
   assert_equal p1#transform m;
   assert_equal p2#transform m2
 
-(* let test_pat_with_obj_trans _ =
+let test_pat_with_obj_trans _ =
   let s = new shape Sphere in
   s#set_transform (scaling 2. 2. 2.);
-  let pat = new pattern Stripe [w; b;]
+  let pat = new pattern Test [w;] in
   s#set_pattern pat;
-  let c = s#color_at (point 2. 3. 4.)
-  assert_equal c {r=1. g=1.5; b=2.} *)
+  let c = s#color_at (point 2. 3. 4.) in
+  assert_equal c {r=1.; g=1.5; b=2.}
 
+let test_pat_with_just_pat_trans _ =
+  let s = new shape Sphere in
+  (* s#set_transform; *)
+  let pat = new pattern Test [w;] in
+  pat#set_transform  (scaling 2. 2. 2.);
+  s#set_pattern pat;
+  let c = s#color_at (point 2. 3. 4.) in
+  assert_equal c {r=1.; g=1.5; b=2.}
+
+let test_obj_with_both  _ =
+  let s = new shape Sphere in
+  s#set_transform (scaling 2. 2. 2.);
+  let pat = new pattern Test [w;] in
+  pat#set_transform  (translation 0.5 1. 1.5);
+  s#set_pattern pat;
+  let c = s#color_at (point 2.5 3. 3.5) in
+  assert_equal c {r=0.75; g=0.5; b=0.25}
+
+  
 let test_gradient_pattern _ =
   let pat = new pattern Gradient [w; b] in
   assert_equal (pat#color_at (point 0. 0. 0.)) w;
@@ -253,7 +274,17 @@ let test_reflective_material_attr _ =
   let m = default_material () in
   assert_equal 0.0  m.reflective
 
+let test_transp_and_refrac_indexes _ =
+  let m = default_material () in
+  assert_equal 0. m.transparency;
+  assert_equal 1.0 m.refractive_idx
 
+let test_glass_sphere _ =
+  let s = glass_sphere () in
+  assert_equal 1.0 s#material.transparency;
+  assert_equal 1.5 s#material.refractive_idx
+  
+  
 
 
 let suite =
@@ -285,12 +316,16 @@ let suite =
     "test_checkers_in_x" >:: test_checkers_in_x;
     "test_checkers_in_y" >:: test_checkers_in_y;
     "test_checkers_in_z" >:: test_checkers_in_z;
-    (* "test_pat_with_obj_trans" >:: test_pat_with_obj_trans; *)
+    "test_pat_with_obj_trans" >:: test_pat_with_obj_trans;
     "test_checkers_in_z" >:: test_checkers_in_z;
     "test_checkers_in_z" >:: test_checkers_in_z;
     "test_checkers_in_z" >:: test_checkers_in_z;
     "test_checkers_in_z" >:: test_checkers_in_z;
     "test_reflective_material_attr" >:: test_reflective_material_attr;
+    "test_transp_and_refrac_indexes" >:: test_transp_and_refrac_indexes;
+    "test_glass_sphere" >:: test_glass_sphere;
+    "test_pat_with_just_pat_trans" >:: test_pat_with_just_pat_trans;
+    "test_obj_with_both" >:: test_obj_with_both;
     
   ]
 
